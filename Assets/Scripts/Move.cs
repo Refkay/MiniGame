@@ -43,9 +43,9 @@ public class Move : MonoBehaviour
 	{
 		Config config = Config.LoadFromFile ();
 		if (config != null) {
-			mMoveSpeed = config.moveSpeed;
-			mDragTimeThreshold = config.dragTimeThreshold;
-			mOffsetThreshold = config.offsetThreshold;
+			mMoveSpeed = config.MoveSpeed;
+			mDragTimeThreshold = config.DragTimeThreshold;
+			mOffsetThreshold = config.OffsetThreshold;
 		}
 	}
 

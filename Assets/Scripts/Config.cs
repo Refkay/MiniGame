@@ -8,9 +8,9 @@ public class Config {
 	
 	private static string fileName = "config.json";
 
-	public float moveSpeed;
-	public float dragTimeThreshold;
-	public float offsetThreshold;
+	public float MoveSpeed;
+	public float DragTimeThreshold;
+	public float OffsetThreshold;
 
 	public static Config LoadFromFile()
 	{
