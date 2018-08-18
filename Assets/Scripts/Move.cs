@@ -41,7 +41,7 @@ public class Move : MonoBehaviour
 
 	void Awake ()
 	{
-		Config config = Config.LoadFromFile ();
+		Config config = Config.Load ();
 		if (config != null) {
 			mMoveSpeed = config.moveSpeed;
 			mDragTimeThreshold = config.dragTimeThreshold;
