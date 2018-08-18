@@ -40,9 +40,19 @@ public class Move : MonoBehaviour
     [SerializeField]
     private float mMinoffset = 30.0f;
 
-    public Camera mCamera;
+ 	public Camera mCamera;
 
     private Vector3 velocity = Vector3.one;
+
+    void Awake ()
+	{
+		Config config = Config.Load ();
+		if (config != null) {
+			mMoveSpeed = config.moveSpeed;
+			mDragTimeThreshold = config.dragTimeThreshold;
+			mOffsetThreshold = config.offsetThreshold;
+		}
+	}
 
     void Start()
     {

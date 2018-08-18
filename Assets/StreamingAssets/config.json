@@ -1,0 +1,5 @@
+{
+    "moveSpeed": 10,
+    "dragTimeThreshold": 0.5,
+    "offsetThreshold": 100
+}
