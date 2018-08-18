@@ -39,6 +39,16 @@ public class Move : MonoBehaviour
     [SerializeField]
     private float mMinoffset = 30.0f;
 
+	void Awake ()
+	{
+		Config config = Config.LoadFromFile ();
+		if (config != null) {
+			mMoveSpeed = config.MoveSpeed;
+			mDragTimeThreshold = config.DragTimeThreshold;
+			mOffsetThreshold = config.OffsetThreshold;
+		}
+	}
+
     void Start()
     {
         mRg2D = GetComponent<Rigidbody2D>();
