@@ -2,6 +2,7 @@
 using System.Collections;
 using HedgehogTeam.EasyTouch;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Move : MonoBehaviour
 {
@@ -38,6 +39,10 @@ public class Move : MonoBehaviour
     //最小可转向距离，滑动必须超过这个距离才可以进行滑动
     [SerializeField]
     private float mMinoffset = 30.0f;
+
+    public Camera mCamera;
+
+    private Vector3 velocity = Vector3.one;
 
     void Start()
     {
@@ -99,5 +104,44 @@ public class Move : MonoBehaviour
 
     }
 
-   
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+           
+        }
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Property")
+        {
+            Debug.Log("On Collision");
+            Vector3 targetPosition = new Vector3(collision.transform.position.x, collision.transform.position.y, mCamera.transform.position.z);
+            //mCamera.transform.localPosition = Vector3.MoveTowards(gameObject.transform.localPosition, targetPosition, 1.5f);
+            mCamera.transform.DOMove(targetPosition, 1.5f);
+            //mCamera.transform.Translate(new Vector3(collision.transform.position.x, collision.transform.position.y, mCamera.transform.position.z));
+            //Destroy(collision.gameObject);
+            mRg2D.Sleep();
+
+        }
+    }
+
+    /// <summary>
+    /// 物体在摄像机内
+    /// </summary>
+    private void OnBecameVisible()
+    {
+        
+    }
+
+    /// <summary>
+    /// 不在摄像机内触发改方法
+    /// </summary>
+    private void OnBecameInvisible()
+    {
+        mRg2D.Sleep();
+        gameObject.transform.position = new Vector3(-3, -2, 0);
+    }
 }
