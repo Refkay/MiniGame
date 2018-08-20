@@ -56,7 +56,7 @@ public class Move : MonoBehaviour
 
     void Start()
     {
-        mRg2D = GetComponent<Rigidbody2D>();
+        mRg2D = GetComponent<Rigidbody2D>();  
     }
 
     void Update()
@@ -70,6 +70,13 @@ public class Move : MonoBehaviour
         EasyTouch.On_TouchStart += On_TouchStart;
         EasyTouch.On_TouchDown += On_TouchDown;
         EasyTouch.On_TouchUp += On_TouchUp;
+    }
+
+    private void OnDestroy()
+    {
+        EasyTouch.On_TouchStart -= On_TouchStart;
+        EasyTouch.On_TouchDown -= On_TouchDown;
+        EasyTouch.On_TouchUp -= On_TouchUp;
     }
 
     private void On_TouchStart(Gesture gesture)
@@ -112,46 +119,5 @@ public class Move : MonoBehaviour
             isMoveable = true;
         }
 
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Enemy")
-        {
-           
-        }
-    }
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Property")
-        {
-            Debug.Log("On Collision");
-            Vector3 targetPosition = new Vector3(collision.transform.position.x, collision.transform.position.y, mCamera.transform.position.z);
-            //mCamera.transform.localPosition = Vector3.MoveTowards(gameObject.transform.localPosition, targetPosition, 1.5f);
-            mCamera.transform.DOMove(targetPosition, 1.5f);
-            //mCamera.transform.Translate(new Vector3(collision.transform.position.x, collision.transform.position.y, mCamera.transform.position.z));
-            //Destroy(collision.gameObject);
-            mRg2D.Sleep();
-
-        }
-    }
-
-    /// <summary>
-    /// 物体在摄像机内
-    /// </summary>
-    private void OnBecameVisible()
-    {
-        
-    }
-
-    /// <summary>
-    /// 不在摄像机内触发改方法
-    /// </summary>
-    private void OnBecameInvisible()
-    {
-        mRg2D.Sleep();
-        gameObject.transform.position = new Vector3(-3, -2, 0);
     }
 }
