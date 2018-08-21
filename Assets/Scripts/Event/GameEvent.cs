@@ -17,7 +17,7 @@ namespace MiniGame
     /// </summary>
     public class OnSubLevelCompleteMsg
     {
-
+       
     }
 
     /// <summary>
@@ -43,12 +43,16 @@ namespace MiniGame
     {
         public Vector3 mPosition;
 
+        public float mAngle;
+
         public bool isMoveDirectly = false;
 
-        public OnCameraMoveMsg(Vector3 position, bool directly)
+
+        public OnCameraMoveMsg(Vector3 position, float angle,bool directly)
         {
             this.mPosition = position;
-            isMoveDirectly = directly;
+            this.mAngle = angle;
+            this.isMoveDirectly = directly;
         }
     }
 

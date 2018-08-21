@@ -25,6 +25,12 @@ namespace MiniGame
         public int mMaxLevel { get; private set; }
         //最高等级的子关卡
         public int mMaxSubLevel { get; private set; }
+        //起始位置信息
+        public Vector3 mStartPosition;
+        //小关卡终点位置信息
+        public Vector3 mEndPosition;
+        //下一小关卡终点的位置信息
+        public Vector3 mNextPostion;
 
         public void Startup()
         {
@@ -36,7 +42,7 @@ namespace MiniGame
             //TODO ：这里的数据需要从存储里面读取，因为还没做，所以先放这里
             MissionData.LoadMissionData();
             UpdateMissionLevel(1, 1);
-            mMaxSubLevel = 2;
+            mMaxSubLevel = 1;
             mMaxLevel = 3;
         }
 
@@ -75,12 +81,16 @@ namespace MiniGame
         public void GoToNextSubLevel()
         {
             if (mCurSubLevel < mMaxSubLevel)
-            {
-                mCurSubLevel++;
-                Vector3 position = MissionData.GetSubLevelPosition(mCurLevel, mCurSubLevel);
+            {               
+                mStartPosition = MissionData.GetSubLevelPosition(mCurLevel, mCurSubLevel);
+                mStartPosition = MissionData.GetSubLevelPosition(mCurLevel, mCurSubLevel);
+                mEndPosition = MissionData.GetSubLevelPosition(mCurLevel, mCurSubLevel + 1);
+                mNextPostion = MissionData.GetSubLevelPosition(mCurLevel, mCurSubLevel + 2);
+                float angele = Vector3.Angle((mEndPosition - mStartPosition), (mNextPostion - mEndPosition));             
                 //移动到下一个小关卡，其实就是移动摄像机跟Player的位置
-                MessageBus.Send(new OnCameraMoveMsg(position, false));
-                MessageBus.Send(new OnPlayerPosChangeMsg(position));
+                MessageBus.Send(new OnCameraMoveMsg(mEndPosition, -angele,false));
+                MessageBus.Send(new OnPlayerPosChangeMsg(mStartPosition));
+                mCurSubLevel++;
             }
             else
             {
@@ -105,12 +115,13 @@ namespace MiniGame
         /// TODO : 后续改进加载方式
         /// </summary>
         public void RestartCurrentSubLevel()
-        {           
-            Vector3 position = MissionData.GetSubLevelPosition(mCurLevel, mCurSubLevel);
-            MessageBus.Send(new OnCameraMoveMsg(position, false));
-            MessageBus.Send(new OnPlayerPosChangeMsg(position));
+        {
+            mStartPosition = MissionData.GetSubLevelPosition(mCurLevel, mCurSubLevel);       
+            //MessageBus.Send(new OnCameraMoveMsg(mStartPosition, false));
+            MessageBus.Send(new OnPlayerPosChangeMsg(mStartPosition));
         }
 
+        
     }
 }
 

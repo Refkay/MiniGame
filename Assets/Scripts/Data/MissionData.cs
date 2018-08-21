@@ -16,9 +16,9 @@ namespace MiniGame
         /// </summary>
         public static void LoadMissionData()
         {
-            Vector3 point1 = new Vector3(-4.1f, -2.19f, 0);
-            Vector3 point2 = new Vector3(-3.7f, 2.59f, 0);
-            Vector3 point3 = new Vector3(-0.16f, 10.54f, 0);
+            Vector3 point1 = new Vector3(-0.0f, -7.7f, 0);
+            Vector3 point2 = new Vector3(-0.22f, 8.3f, 0);
+            Vector3 point3 = new Vector3(-9.04f, 19.64f, 0);
             Dictionary<int, Vector3> mLevelDic = new Dictionary<int, Vector3>();
             mLevelDic.Add(1, point1);
             mLevelDic.Add(2, point2);
