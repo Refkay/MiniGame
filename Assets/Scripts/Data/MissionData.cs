@@ -23,9 +23,11 @@ namespace MiniGame
             mLevelDic.Add(1, point1);
             mLevelDic.Add(2, point2);
             mLevelDic.Add(3, point3);
+            mLevelDic.Add(4, point3);
             mMissionDataDic.Add(1, mLevelDic);
             mMissionDataDic.Add(2, mLevelDic);
             mMissionDataDic.Add(3, mLevelDic);
+            mMissionDataDic.Add(4, mLevelDic);
         }
 
         /// <summary>

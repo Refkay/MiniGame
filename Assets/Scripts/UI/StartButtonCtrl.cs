@@ -9,13 +9,13 @@ public class StartButtonCtrl : MonoBehaviour
         if (!PlayerProgress.Instance.HasPlayed)
         {
             var lb = transform.FindChild("Label").gameObject;
-            lb.GetComponent<UILabel>().text = "NEW GAME";
+            //lb.GetComponent<UILabel>().text = "NEW GAME";
         }
         UIEventListener.Get(gameObject).onClick = OnStartButtonClick;
     }
 
     void OnStartButtonClick(GameObject obj)
     {
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("Level1Story");
     }
 }

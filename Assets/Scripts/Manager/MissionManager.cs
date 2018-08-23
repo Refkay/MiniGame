@@ -43,7 +43,7 @@ namespace MiniGame
             MissionData.LoadMissionData();
             UpdateMissionLevel(1, 1);
             mMaxSubLevel = 1;
-            mMaxLevel = 3;
+            mMaxLevel = 4;
         }
 
 

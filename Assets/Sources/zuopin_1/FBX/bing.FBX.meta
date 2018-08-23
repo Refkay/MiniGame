@@ -1,0 +1,140 @@
+fileFormatVersion: 2
+guid: e489067dc6d44d44882ac7f22520e5f1
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: JQMJ_wj_shixiang002
+    100004: JQMJ_wj_shixiang003
+    100006: JQMJ_wj_shixiang004
+    100008: JQMJ_wj_shixiang006
+    100010: JQMJ_wj_shixiang007
+    100012: JQMJ_wj_shixiang008
+    100014: JQMJ_wj_shixiang009
+    100016: JQMJ_wj_shixiang01
+    100018: JQMJ_wj_shixiang01 1
+    100020: Object001
+    100022: Object003
+    100024: Object004
+    100026: Object005
+    400000: //RootNode
+    400002: JQMJ_wj_shixiang002
+    400004: JQMJ_wj_shixiang003
+    400006: JQMJ_wj_shixiang004
+    400008: JQMJ_wj_shixiang006
+    400010: JQMJ_wj_shixiang007
+    400012: JQMJ_wj_shixiang008
+    400014: JQMJ_wj_shixiang009
+    400016: JQMJ_wj_shixiang01
+    400018: JQMJ_wj_shixiang01 1
+    400020: Object001
+    400022: Object003
+    400024: Object004
+    400026: Object005
+    2300000: JQMJ_wj_shixiang002
+    2300002: JQMJ_wj_shixiang003
+    2300004: JQMJ_wj_shixiang004
+    2300006: JQMJ_wj_shixiang006
+    2300008: JQMJ_wj_shixiang007
+    2300010: JQMJ_wj_shixiang008
+    2300012: JQMJ_wj_shixiang009
+    2300014: JQMJ_wj_shixiang01
+    2300016: JQMJ_wj_shixiang01 1
+    2300018: Object001
+    2300020: Object003
+    2300022: Object004
+    2300024: Object005
+    2300026: //RootNode
+    3300000: JQMJ_wj_shixiang002
+    3300002: JQMJ_wj_shixiang003
+    3300004: JQMJ_wj_shixiang004
+    3300006: JQMJ_wj_shixiang006
+    3300008: JQMJ_wj_shixiang007
+    3300010: JQMJ_wj_shixiang008
+    3300012: JQMJ_wj_shixiang009
+    3300014: JQMJ_wj_shixiang01
+    3300016: JQMJ_wj_shixiang01 1
+    3300018: Object001
+    3300020: Object003
+    3300022: Object004
+    3300024: Object005
+    3300026: //RootNode
+    4300000: JQMJ_wj_shixiang01
+    4300002: JQMJ_wj_shixiang01
+    4300004: Object001
+    4300006: JQMJ_wj_shixiang002
+    4300008: Object003
+    4300010: JQMJ_wj_shixiang003
+    4300012: JQMJ_wj_shixiang004
+    4300014: JQMJ_wj_shixiang006
+    4300016: Object004
+    4300018: JQMJ_wj_shixiang007
+    4300020: Object005
+    4300022: JQMJ_wj_shixiang008
+    4300024: JQMJ_wj_shixiang009
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.01
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
