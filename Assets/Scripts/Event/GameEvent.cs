@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 namespace MiniGame
@@ -37,6 +38,22 @@ namespace MiniGame
     }
 
     /// <summary>
+    /// 吃到中转点，能量水晶的消息
+    /// </summary>
+    public class OnAddTurnChanceMsg
+    {
+
+    }
+
+    /// <summary>
+    /// 吃到水晶的消息
+    /// </summary>
+    public class OnAddStarMsg
+    {
+
+    }
+
+    /// <summary>
     /// 相机移动
     /// </summary>
     public class OnCameraMoveMsg
@@ -56,17 +73,5 @@ namespace MiniGame
         }
     }
 
-    /// <summary>
-    /// 光球位置改变
-    /// </summary>
-    public class OnPlayerPosChangeMsg
-    {
-        public Vector3 mPosition;
-
-        public OnPlayerPosChangeMsg(Vector3 position)
-        {
-            this.mPosition = position;
-        }
-    }
 }
 

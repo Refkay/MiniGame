@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 namespace MiniGame
 {
-    public class GameSystem : MonoBehaviour
+    public class GameSystem : MonoSingleton<GameSystem>
     {
 
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            InitMessage(true);
+            InitMessage(true);           
         }
 
         private void OnDestroy()
@@ -80,14 +80,18 @@ namespace MiniGame
 
         private IEnumerator CompleteLevel()
         {
-            //TODO : 关卡完成，在这里可以进行相应的操作          
+            //TODO : 大关卡完成，在这里可以进行相应的操作          
             yield return new WaitForSeconds(2);
+            //这里先跳转到大关卡通关的界面，就是展示连线形成星座的界面，然后再进入到下一关
             GameManagers.mMissionManager.GoToNextLevel();
+            yield return null;
         }
 
         private IEnumerator CompleteSubLevel()
         {
             //TODO : 小关卡完成，在这里可以进行相应的操作，现在只是移动相机
+            //这里先跳转到小关卡通关的界面，就是展示点亮某颗星星的界面，然后再加载下一关
+
             GameManagers.mMissionManager.GoToNextSubLevel();
             yield return null;
         }
@@ -95,7 +99,6 @@ namespace MiniGame
         private IEnumerator FailSubLevel()
         {
             //TODO : 小关卡失败，在这里可以进行相应的操作
-            GameManagers.mMissionManager.RestartCurrentSubLevel();
             yield return null;
         }
 

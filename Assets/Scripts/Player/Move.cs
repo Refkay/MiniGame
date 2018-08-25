@@ -52,6 +52,15 @@ namespace MiniGame
         [SerializeField]
         private float mAccSpeed = 3.0f;
 
+        //光球初始化位置
+        private Vector3 mInitialPosition;
+
+        //转向机会
+        private int mTurnCount = 1;
+
+        //吃到的星星数量
+        private int mStartCount = 1;
+
         void Awake()
         {
             InitMessage(true);
@@ -67,18 +76,43 @@ namespace MiniGame
         void Start()
         {
             mRg2D = GetComponent<Rigidbody2D>();
+            mInitialPosition = transform.position;
         }
 
         private void InitMessage(bool register)
         {
             if (register)
             {
-                MessageBus.Register<OnPlayerPosChangeMsg>(OnPlayerPosChange);
+                MessageBus.Register<OnAddTurnChanceMsg>(OnAddTurnChance);
+                MessageBus.Register<OnAddStarMsg>(OnAddStar);
             }
             else
             {
-                MessageBus.UnRegister<OnPlayerPosChangeMsg>(OnPlayerPosChange);
+                MessageBus.UnRegister<OnAddTurnChanceMsg>(OnAddTurnChance);
+                MessageBus.UnRegister<OnAddStarMsg>(OnAddStar);
             }
+        }
+
+        /// <summary>
+        /// 吃到能量水晶增加转向机会
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        private bool OnAddTurnChance(OnAddTurnChanceMsg msg)
+        {
+            mTurnCount++;
+            return false;
+        }
+
+        /// <summary>
+        /// 吃到星星
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        private bool OnAddStar(OnAddStarMsg msg)
+        {
+            mStartCount++;
+            return false;
         }
 
         private void OnEnable()
@@ -135,18 +169,17 @@ namespace MiniGame
                 mRg2D.velocity = mMoveDirection * mMoveSpeed;
                 isMoveable = true;
             }
-        }
+        }       
 
         /// <summary>
-        /// 小球通过小关后会改变位置，改变位置后小球会禁止在新位置
+        /// 死亡
         /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        private bool OnPlayerPosChange(OnPlayerPosChangeMsg msg)
+        private void OnPlayerDead()
         {
-            gameObject.transform.position = msg.mPosition;
+            //重置位置
+            gameObject.transform.position = mInitialPosition;
             mRg2D.Sleep();
-            return false;
+            MessageBus.Send(new OnSubLevelFailedMsg());
         }
 
         /// <summary>
@@ -159,7 +192,7 @@ namespace MiniGame
             switch (tag)
             {
                 case "Damage":
-                    MessageBus.Send(new OnSubLevelFailedMsg());
+                    OnPlayerDead();                   
                     break;
                 default:
                     break;
@@ -237,7 +270,7 @@ namespace MiniGame
         /// </summary>
         private void OnBecameInvisible()
         {
-            MessageBus.Send(new OnSubLevelFailedMsg());
+            OnPlayerDead();
         }
      
     }

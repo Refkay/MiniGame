@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MiniGame
+namespace MiniGameComm
 {
     /// <summary>
     /// 音频管理类
     /// </summary>
-    public class AudioManager : MonoBehaviour, IGameManager
+    public class AudioManager : MonoSingleton<AudioManager>, IGameManager
     {
 
         public ManagerStatus mStatus
