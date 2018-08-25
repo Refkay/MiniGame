@@ -16,6 +16,6 @@ public class StartButtonCtrl : MonoBehaviour
 
     void OnStartButtonClick(GameObject obj)
     {
-        SceneManager.LoadScene("Level1Story");
+        SceneManager.LoadScene("Level0Story");
     }
 }
