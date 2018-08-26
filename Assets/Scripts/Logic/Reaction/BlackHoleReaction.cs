@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BlackHole : MonoBehaviour {
+public class BlackHoleReaction : MonoBehaviour {
 
     public float gravityValue = 20.0f;
 
