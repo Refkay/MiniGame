@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MiniGameComm;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace MiniGame
 {
@@ -83,7 +84,8 @@ namespace MiniGame
             //TODO : 大关卡完成，在这里可以进行相应的操作          
             yield return new WaitForSeconds(2);
             //这里先跳转到大关卡通关的界面，就是展示连线形成星座的界面，然后再进入到下一关
-            GameManagers.mMissionManager.GoToNextLevel();
+            SceneManager.LoadSceneAsync("Constellation" + 1);
+            
             yield return null;
         }
 
