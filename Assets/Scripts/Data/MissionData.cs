@@ -16,9 +16,8 @@ namespace MiniGame
         /// </summary>
         public static void LoadMissionData()
         {           
-            mMissionDataDic.Add(1, 4);
-            mMissionDataDic.Add(2, 4);
-            mMissionDataDic.Add(3, 3);
+            mMissionDataDic.Add(1, 3);
+            mMissionDataDic.Add(2, 5);      
         }
        
         /// <summary>
