@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace MiniGame
 {
@@ -11,10 +12,12 @@ namespace MiniGame
     /// </summary>
     public class DrawStarTrack : MonoBehaviour
     {
+        public Transform[] positions;
         public GameObject bgImage;
-        private List<Vector3> transformList = new List<Vector3>();      
+        public Camera mainCamera;
         private Vector3 starPosition;
         private Vector3 targetPosition;
+      
         //绘制线的时间
         private float lineTime = 2.0f;
         //绘制线的速度
@@ -26,17 +29,8 @@ namespace MiniGame
         private Color hideColor = new Color(0, 0, 0, 0);
 
         void Start()
-        {
-            //这里加载Star的位置信息，这里先写死
-            Vector3 star1 = new Vector3(-0.93f, 1.97f, 0);
-            Vector3 star2 = new Vector3(0.67f, 0.66f, 0);
-            Vector3 star3 = new Vector3(2, -0.66f,0);
-            Vector3 star4 = new Vector3(1.08f, -2.0f, 0);
-            transformList.Add(star1);
-            transformList.Add(star2);
-            transformList.Add(star3);
-            transformList.Add(star4);
-            DrawAllStarTrack();
+        {        
+            DrawAllStarTrack();      
         }
 
         // Update is called once per frame
@@ -56,12 +50,13 @@ namespace MiniGame
 
         IEnumerator DrawAllLine()
         {
-            starPosition = transformList[0];
-            for (int i = 1; i < transformList.Count; i ++)
+            starPosition = positions[0].position;
+            for (int i = 1; i < positions.Length; i ++)
             {
-                targetPosition = transformList[i];
+                targetPosition = positions[i].position;
                 GameObject go = GameObject.Instantiate(Resources.Load("Prefabs/LineEff")) as GameObject;
-                go.transform.position = starPosition;
+                go.transform.parent = gameObject.transform;
+                go.transform.position = starPosition;               
                 TrailAutoMoveComp t = go.AddComponent<TrailAutoMoveComp>();
                 t.Init(targetPosition, lineTime);
                 starPosition = targetPosition;
@@ -72,11 +67,16 @@ namespace MiniGame
             {
                 bgImage.SetActive(true);
             }
-            yield return new WaitForSeconds(2.0f);
+            
+            yield return new WaitForSeconds(4.0f);
+
+            mainCamera.DOOrthoSize(1.0f, 4.0f);
+            yield return new WaitForSeconds(3.0f);
             //进入下一个关卡
             GameManagers.mMissionManager.GoToNextLevel();
             yield return null;
-        }      
+        }
+     
     }
 
 }

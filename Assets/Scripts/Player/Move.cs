@@ -12,6 +12,8 @@ namespace MiniGame
 
         public Rigidbody2D mRg2D;
 
+        private GameObject mPlayerDead;
+
         //能否能移动
         private bool isMoveable;
 
@@ -64,6 +66,12 @@ namespace MiniGame
         //吃到的星星数量
         private int mStartCount = 1;
 
+        //是否通关了
+        private bool isSuccess;
+
+        //小球重生时间
+        private float mRebornTime = 0.7f;
+
         void Awake()
         {
             InitMessage(true);
@@ -81,6 +89,7 @@ namespace MiniGame
             mRg2D = GetComponent<Rigidbody2D>();
             mInitialPosition = transform.position;
             mInitialRotation = transform.rotation;
+            isSuccess = false;
         }
 
         private void InitMessage(bool register)
@@ -127,11 +136,11 @@ namespace MiniGame
         }
 
         private void OnDestroy()
-        {
+        {           
             InitMessage(false);
             EasyTouch.On_TouchStart -= On_TouchStart;
             EasyTouch.On_TouchDown -= On_TouchDown;
-            EasyTouch.On_TouchUp -= On_TouchUp;
+            EasyTouch.On_TouchUp -= On_TouchUp;        
         }
 
         private void On_TouchStart(Gesture gesture)
@@ -180,17 +189,54 @@ namespace MiniGame
         /// <summary>
         /// 死亡
         /// </summary>
-        private void OnPlayerDead()
+        private void OnPlayerDead(bool isOutOfCamera)
         {
-            //重置位置
-            gameObject.transform.position = mInitialPosition;
-            gameObject.transform.rotation = mInitialRotation;
+            //重置位置          
             mRg2D.Sleep();
+            //播放死亡动画
+            GameObject playDeadObj = new GameObject();
+            //光球出摄像机外不播放死亡动画
+            if (!isOutOfCamera)
+            {
+                mPlayerDead = GameObject.Instantiate(Resources.Load("Prefabs/PlayerDead")) as GameObject;
+                mPlayerDead.transform.position = gameObject.transform.position;
+            }    
             //重置转向次数
             mTurnCount = 2;
+            //这里是隐藏光球，因为Invoke或者协程需要gameObject的active为true的时候才能正常执行，所以这里想到用改透明度来隐藏光球
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
+            Invoke("ResetPlayer", mRebornTime);
+            if (playDeadObj != null)
+            {
+                Destroy(playDeadObj);
+            }
+            Debug.Log("执行到这里了");
+  
+        }
+
+        //重置小球
+        private void ResetPlayer()
+        {
+            gameObject.transform.position = mInitialPosition;
+            gameObject.transform.rotation = mInitialRotation;
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
+            
+            //销毁小球死亡的GameObject
+            if (mPlayerDead != null)
+            {
+                Destroy(mPlayerDead);
+            }
             MessageBus.Send(new OnSubLevelFailedMsg());
         }
 
+        private IEnumerator GoToNext()
+        {
+            yield return new WaitForSeconds(1.2f);
+            //发送消息到GameSystem，小关卡完成，通知进入下一关卡      
+            MessageBus.Send(new OnSubLevelCompleteMsg());
+        }
         /// <summary>
         /// 碰撞检测
         /// </summary>
@@ -200,8 +246,8 @@ namespace MiniGame
             string tag = collision.gameObject.tag;
             switch (tag)
             {
-                case "Damage":
-                    OnPlayerDead();                   
+                case "Damage":               
+                    OnPlayerDead(false);       
                     break;
                 default:
                     break;
@@ -220,10 +266,11 @@ namespace MiniGame
                 case "Destination":
                     //通过当前小关卡
                     Debug.Log("On SubLevel Complete");
+                    isSuccess = true;
                     GetComponent<Rigidbody2D>().Sleep();
-                    //发送消息到GameSystem，小关卡完成，通知进入下一关卡,这里传入了一个位置参数，这样子只需要保存一个位置就够了
-                    MessageBus.Send(new OnSubLevelCompleteMsg());
-                    Destroy(collision.gameObject);              
+                    gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+                    gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
+                    StartCoroutine(GoToNext());
                     break;
                 default:
                     break;
@@ -278,10 +325,13 @@ namespace MiniGame
         /// 不在摄像机内触发改方法，Player一移动出摄像机就判定为死亡
         /// </summary>
         private void OnBecameInvisible()
-        {
-            OnPlayerDead();
+        {               
+            if (!isSuccess)
+            {
+                OnPlayerDead(true);
+            }     
         }
-     
+
     }
 
 }
