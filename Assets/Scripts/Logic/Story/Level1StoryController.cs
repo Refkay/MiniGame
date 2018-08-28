@@ -150,7 +150,7 @@ public class Level1StoryController : MonoBehaviour
     private void SceneChange()
     {
         SceneManager.UnloadScene("Level1Story");
-        Application.LoadLevelAsync("Main");
+        Application.LoadLevelAsync("Level1-1");
     }
     
     private void _resetFlag()

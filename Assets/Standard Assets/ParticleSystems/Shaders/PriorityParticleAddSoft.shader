@@ -51,7 +51,7 @@ Category {
 			
 			v2f vert (appdata_t v)
 			{
-				v2f o;
+				v2f o;				
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				#ifdef SOFTPARTICLES_ON
 				o.projPos = ComputeScreenPos (o.vertex);

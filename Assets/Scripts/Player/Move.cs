@@ -23,7 +23,7 @@ namespace MiniGame
 
         //物体移动的时间
         [SerializeField]
-        private float mMoveSpeed = 10.0f;
+        private float mMoveSpeed = 7.0f;
 
         //滑动时间
         private float mDragTime = 0.0f;
@@ -55,8 +55,11 @@ namespace MiniGame
         //光球初始化位置
         private Vector3 mInitialPosition;
 
+        //光球初始化
+        private Quaternion mInitialRotation;
+
         //转向机会
-        private int mTurnCount = 1;
+        private int mTurnCount = 2;
 
         //吃到的星星数量
         private int mStartCount = 1;
@@ -74,9 +77,10 @@ namespace MiniGame
         }
 
         void Start()
-        {
+        {          
             mRg2D = GetComponent<Rigidbody2D>();
             mInitialPosition = transform.position;
+            mInitialRotation = transform.rotation;
         }
 
         private void InitMessage(bool register)
@@ -142,13 +146,14 @@ namespace MiniGame
             mDragTime += Time.deltaTime;
             mOffsetDistance = mMoveDirection.magnitude;
             //滑动的时候超过时间的阈值或者超过距离的阈值，球也要转向      
-            if (((mDragTime > mDragTimeThreshold) || (mOffsetDistance > mOffsetThreshold)) && isMoveable)
+            if (((mDragTime > mDragTimeThreshold) || (mOffsetDistance > mOffsetThreshold)) && isMoveable )
             {
                 mMoveDirection.Normalize();
                 mRg2D.velocity = mMoveDirection * mMoveSpeed;
                 mDragTime = 0;
                 mOffsetDistance = 0;
                 isMoveable = false;
+                mTurnCount--;
             }
         }
 
@@ -161,13 +166,14 @@ namespace MiniGame
             mTargetPosition = gesture.position;
             mMoveDirection = mTargetPosition - mStartPosition;
             //必须滑动到一定的距离才能转向
-            if (mMoveDirection.magnitude >= mMinoffset)
+            if (mMoveDirection.magnitude >= mMinoffset )
             {
                 mRg2D.Sleep();
                 mMoveDirection.Normalize();
                 //mRg2d.AddForce(moveDirection * mMoveSpeed);
                 mRg2D.velocity = mMoveDirection * mMoveSpeed;
                 isMoveable = true;
+                mTurnCount--;
             }
         }       
 
@@ -178,7 +184,10 @@ namespace MiniGame
         {
             //重置位置
             gameObject.transform.position = mInitialPosition;
+            gameObject.transform.rotation = mInitialRotation;
             mRg2D.Sleep();
+            //重置转向次数
+            mTurnCount = 2;
             MessageBus.Send(new OnSubLevelFailedMsg());
         }
 
