@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/UnionAssetes/Particle/Space/SG_SpacePackage/Scenes/Scene_Space_Particles.unity
+- path: Assets/Scenes/Level2-5.unity
   isLoaded: 1
   isActive: 1
