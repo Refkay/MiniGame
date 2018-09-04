@@ -77,7 +77,9 @@ namespace MiniGame
             if (mCurSubLevel < mMaxSubLevel)
             {
                 mCurSubLevel++;
-                SceneManager.LoadSceneAsync("Level" + mCurLevel + "-" + mCurSubLevel);               
+                //SceneManager.LoadSceneAsync("Level" + mCurLevel + "-" + mCurSubLevel);               
+                MessageBus.Send(new OnCameraMoveMsg(new Vector3(20.82f, 17.59f, -10), false));
+                MessageBus.Send(new OnPlayerMoveMsg(new Vector3(20.82f, 8.59f, 0)));
             }
             else
             {

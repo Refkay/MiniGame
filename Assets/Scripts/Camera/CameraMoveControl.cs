@@ -31,10 +31,10 @@ namespace MiniGame
                 GetComponent<Camera>().transform.position = targetPosition;
             }
             else
-            {               
-                Vector3 rotate = new Vector3(0, 0, msg.mAngle);
-                GetComponent<Camera>().transform.DORotate(rotate, 1.0f);
-                
+            {
+                //Vector3 rotate = new Vector3(0, 0, msg.mAngle);
+                //GetComponent<Camera>().transform.DORotate(rotate, 1.0f);               
+                GetComponent<Camera>().transform.DOMove(targetPosition, 3.0f);
             }
 
             return false;

@@ -15,7 +15,7 @@ namespace MiniGame
         private GameObject mPlayerDead;
 
         //能否能移动
-        private bool isMoveable;
+        private bool isMoveable = true;
 
         private Vector2 mStartPosition;
 
@@ -57,7 +57,7 @@ namespace MiniGame
         //光球初始化位置
         private Vector3 mInitialPosition;
 
-        //光球初始化
+        //光球初始化角度
         private Quaternion mInitialRotation;
 
         //转向机会
@@ -98,11 +98,13 @@ namespace MiniGame
             {
                 MessageBus.Register<OnAddTurnChanceMsg>(OnAddTurnChance);
                 MessageBus.Register<OnAddStarMsg>(OnAddStar);
+                MessageBus.Register<OnPlayerMoveMsg>(OnPlayerMove);
             }
             else
             {
                 MessageBus.UnRegister<OnAddTurnChanceMsg>(OnAddTurnChance);
                 MessageBus.UnRegister<OnAddStarMsg>(OnAddStar);
+                MessageBus.UnRegister<OnPlayerMoveMsg>(OnPlayerMove);
             }
         }
 
@@ -125,6 +127,22 @@ namespace MiniGame
         private bool OnAddStar(OnAddStarMsg msg)
         {
             mStartCount++;
+            return false;
+        }
+
+        /// <summary>
+        /// Player移动到指定位置
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        private bool OnPlayerMove(OnPlayerMoveMsg msg)
+        {
+            //小球的初始化位置变为下一个位置
+            mInitialPosition = msg.mTargetPos;
+            gameObject.transform.DOMove(msg.mTargetPos, 3.0f).OnComplete(()=> {
+                gameObject.GetComponent<BoxCollider2D>().enabled = true;
+                isMoveable = true;
+            });
             return false;
         }
 
@@ -161,7 +179,7 @@ namespace MiniGame
                 mRg2D.velocity = mMoveDirection * mMoveSpeed;
                 mDragTime = 0;
                 mOffsetDistance = 0;
-                isMoveable = false;
+                //isMoveable = false;
                 mTurnCount--;
             }
         }
@@ -175,13 +193,13 @@ namespace MiniGame
             mTargetPosition = gesture.position;
             mMoveDirection = mTargetPosition - mStartPosition;
             //必须滑动到一定的距离才能转向
-            if (mMoveDirection.magnitude >= mMinoffset )
+            if (mMoveDirection.magnitude >= mMinoffset && isMoveable)
             {
                 mRg2D.Sleep();
                 mMoveDirection.Normalize();
                 //mRg2d.AddForce(moveDirection * mMoveSpeed);
                 mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                isMoveable = true;
+                //isMoveable = true;
                 mTurnCount--;
             }
         }       
@@ -193,6 +211,7 @@ namespace MiniGame
         {
             //重置位置          
             mRg2D.Sleep();
+            isMoveable = false;
             //播放死亡动画
             GameObject playDeadObj = new GameObject();
             //光球出摄像机外不播放死亡动画
@@ -222,7 +241,8 @@ namespace MiniGame
             gameObject.transform.rotation = mInitialRotation;
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
-            
+            isMoveable = true;
+
             //销毁小球死亡的GameObject
             if (mPlayerDead != null)
             {
@@ -234,6 +254,9 @@ namespace MiniGame
         private IEnumerator GoToNext()
         {
             yield return new WaitForSeconds(1.2f);
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
             //发送消息到GameSystem，小关卡完成，通知进入下一关卡      
             MessageBus.Send(new OnSubLevelCompleteMsg());
         }
@@ -267,6 +290,7 @@ namespace MiniGame
                     //通过当前小关卡
                     Debug.Log("On SubLevel Complete");
                     isSuccess = true;
+                    isMoveable = false;
                     GetComponent<Rigidbody2D>().Sleep();
                     gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
                     gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);

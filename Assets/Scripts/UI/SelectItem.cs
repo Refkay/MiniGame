@@ -50,6 +50,7 @@ namespace MiniGame
         private void InitButtonEvent()
         {
             btn.onClick.AddListener(delegate () {
+                MissionManager.Instance.UpdateMissionLevel(data.level, data.subLevel);
                 SceneManager.LoadSceneAsync("Level" + data.level + "-" + data.subLevel);
             });
            

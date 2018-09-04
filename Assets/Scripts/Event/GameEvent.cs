@@ -60,18 +60,26 @@ namespace MiniGame
     {
         public Vector3 mPosition;
 
-        public float mAngle;
-
         public bool isMoveDirectly = false;
 
-
-        public OnCameraMoveMsg(Vector3 position, float angle,bool directly)
+        public OnCameraMoveMsg(Vector3 position,bool directly)
         {
             this.mPosition = position;
-            this.mAngle = angle;
             this.isMoveDirectly = directly;
         }
     }
 
+    /// <summary>
+    /// 光球移动到指定位置
+    /// </summary>
+    public class OnPlayerMoveMsg
+    {
+        public Vector3 mTargetPos;
+
+        public OnPlayerMoveMsg(Vector3 position)
+        {
+            this.mTargetPos = position;
+        }
+    }
 }
 
