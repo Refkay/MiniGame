@@ -27,8 +27,6 @@ namespace MiniGame
         //最高等级的子关卡
         public int mMaxSubLevel { get; private set; }
 
-        private int count = 0;
-
         public void Startup()
         {
             mStatus = ManagerStatus.Started;
@@ -37,14 +35,13 @@ namespace MiniGame
             UpdateMissionLevel(1, 1);
             mMaxLevel = MissionData.GetMaxLevel();
             mMaxSubLevel = MissionData.GetMaxSubLevel(mCurLevel);
-            count++;
-            int c = count;
         }    
 
         public void UpdateMissionLevel(int currentLevel, int currentSubLevel)
         {
             this.mCurLevel = currentLevel;
             this.mCurSubLevel = currentSubLevel;
+            mMaxSubLevel = MissionData.GetMaxSubLevel(mCurLevel);
         }
 
         /// <summary>
@@ -77,9 +74,11 @@ namespace MiniGame
             if (mCurSubLevel < mMaxSubLevel)
             {
                 mCurSubLevel++;
-                //SceneManager.LoadSceneAsync("Level" + mCurLevel + "-" + mCurSubLevel);               
-                MessageBus.Send(new OnCameraMoveMsg(new Vector3(20.82f, 17.59f, -10), false));
-                MessageBus.Send(new OnPlayerMoveMsg(new Vector3(20.82f, 8.59f, 0)));
+                //不移动镜头的做法
+                //SceneManager.LoadSceneAsync("Level" + mCurLevel + "-" + mCurSubLevel); 
+                //移动镜头的做法              
+                MessageBus.Send(new OnCameraMoveMsg(MissionData.GetCameraPosition(mCurLevel, mCurSubLevel), false));
+                MessageBus.Send(new OnPlayerMoveMsg(MissionData.GetPlayerPosition(mCurLevel, mCurSubLevel), false));
             }
             else
             {
@@ -89,15 +88,20 @@ namespace MiniGame
         }
 
         /// <summary>
-        /// 重制当前的大关卡
+        /// 获得Player初始位置
         /// </summary>
-        public void RestartCurrentLevel()
+        public Vector3 GetPlayerStartPos()
         {
-            string name = "Level" + mCurLevel;
-            Debug.Log("Loading " + name);
-            Application.LoadLevel(name);
-        }    
-        
+            return MissionData.GetPlayerPosition(mCurLevel, mCurSubLevel);
+        }
+
+        /// <summary>
+        /// 获得相机初始位置
+        /// </summary>
+        public Vector3 GetCameraStartPos()
+        {
+            return MissionData.GetCameraPosition(mCurLevel, mCurSubLevel);
+        }
     }
 }
 

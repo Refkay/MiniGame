@@ -13,6 +13,7 @@ namespace MiniGame
 
         void Awake()
         {
+            gameObject.transform.position = MissionManager.Instance.GetCameraStartPos();
             MessageBus.Register<OnCameraMoveMsg>(OnCameraMove);
         }
 
@@ -34,7 +35,7 @@ namespace MiniGame
             {
                 //Vector3 rotate = new Vector3(0, 0, msg.mAngle);
                 //GetComponent<Camera>().transform.DORotate(rotate, 1.0f);               
-                GetComponent<Camera>().transform.DOMove(targetPosition, 3.0f);
+                GetComponent<Camera>().transform.DOMove(targetPosition, 4.0f);
             }
 
             return false;

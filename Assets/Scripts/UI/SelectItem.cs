@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using MiniGameComm;
 
 namespace MiniGame
 {
@@ -51,7 +52,7 @@ namespace MiniGame
         {
             btn.onClick.AddListener(delegate () {
                 MissionManager.Instance.UpdateMissionLevel(data.level, data.subLevel);
-                SceneManager.LoadSceneAsync("Level" + data.level + "-" + data.subLevel);
+                SceneManager.LoadSceneAsync("Level" + data.level + "-" + "1");               
             });
            
         }

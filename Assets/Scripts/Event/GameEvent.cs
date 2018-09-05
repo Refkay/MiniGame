@@ -76,9 +76,12 @@ namespace MiniGame
     {
         public Vector3 mTargetPos;
 
-        public OnPlayerMoveMsg(Vector3 position)
+        public bool isMoveDirectly = false;
+
+        public OnPlayerMoveMsg(Vector3 position, bool directly)
         {
             this.mTargetPos = position;
+            this.isMoveDirectly = directly;
         }
     }
 }

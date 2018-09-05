@@ -74,6 +74,7 @@ namespace MiniGame
 
         void Awake()
         {
+            gameObject.transform.position = MissionManager.Instance.GetPlayerStartPos();
             InitMessage(true);
             Config config = Config.Load();
             if (config != null)
@@ -137,12 +138,22 @@ namespace MiniGame
         /// <returns></returns>
         private bool OnPlayerMove(OnPlayerMoveMsg msg)
         {
-            //小球的初始化位置变为下一个位置
+            isSuccess = false;
             mInitialPosition = msg.mTargetPos;
-            gameObject.transform.DOMove(msg.mTargetPos, 3.0f).OnComplete(()=> {
-                gameObject.GetComponent<BoxCollider2D>().enabled = true;
-                isMoveable = true;
-            });
+            if (msg.isMoveDirectly) {
+                gameObject.transform.position = msg.mTargetPos;
+            }
+            else
+            {
+                gameObject.transform.DOMove(msg.mTargetPos, 4.0f).OnComplete(() =>
+                {
+                    gameObject.GetComponent<BoxCollider2D>().enabled = true;
+                    isMoveable = true;
+                });
+            }
+            //小球的初始化位置变为下一个位置
+         
+         
             return false;
         }
 
