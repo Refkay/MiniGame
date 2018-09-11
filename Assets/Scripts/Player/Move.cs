@@ -17,11 +17,11 @@ namespace MiniGame
         //能否能移动
         private bool isMoveable = true;
 
-        private Vector2 mStartPosition;
+        private Vector3 mStartPosition;
 
-        private Vector2 mTargetPosition;
+        private Vector3 mTargetPosition;
 
-        private Vector2 mMoveDirection;
+        private Vector3 mMoveDirection;
 
         //物体移动的时间
         [SerializeField]
@@ -145,10 +145,12 @@ namespace MiniGame
             }
             else
             {
+                SetPlayerAngle(msg.mTargetPos);
                 gameObject.transform.DOMove(msg.mTargetPos, 4.0f).OnComplete(() =>
                 {
                     gameObject.GetComponent<BoxCollider2D>().enabled = true;
                     isMoveable = true;
+                    this.transform.eulerAngles = new Vector3(0, 0, 0);
                 });
             }
             //小球的初始化位置变为下一个位置
@@ -186,6 +188,7 @@ namespace MiniGame
             //滑动的时候超过时间的阈值或者超过距离的阈值，球也要转向      
             if (((mDragTime > mDragTimeThreshold) || (mOffsetDistance > mOffsetThreshold)) && isMoveable )
             {
+                SetPlayerAngle(mMoveDirection);
                 mMoveDirection.Normalize();
                 mRg2D.velocity = mMoveDirection * mMoveSpeed;
                 mDragTime = 0;
@@ -207,6 +210,7 @@ namespace MiniGame
             if (mMoveDirection.magnitude >= mMinoffset && isMoveable)
             {
                 mRg2D.Sleep();
+                SetPlayerAngle(mMoveDirection);
                 mMoveDirection.Normalize();
                 //mRg2d.AddForce(moveDirection * mMoveSpeed);
                 mRg2D.velocity = mMoveDirection * mMoveSpeed;
@@ -214,6 +218,18 @@ namespace MiniGame
                 mTurnCount--;
             }
         }       
+
+        private void SetPlayerAngle(Vector3 targetPosition)
+        {
+            float angle;
+            Vector2 targetDir = targetPosition - gameObject.transform.position;
+            angle = Vector2.Angle(targetDir, Vector3.up);
+            if (targetPosition.x > gameObject.transform.position.x)
+            {
+                angle = -angle;
+            }
+            this.transform.eulerAngles = new Vector3(0, 0, angle);
+        }
 
         /// <summary>
         /// 死亡
@@ -252,6 +268,7 @@ namespace MiniGame
             gameObject.transform.rotation = mInitialRotation;
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
+            this.transform.eulerAngles = new Vector3(0, 0, 0);
             isMoveable = true;
 
             //销毁小球死亡的GameObject
