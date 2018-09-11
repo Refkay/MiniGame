@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 namespace MiniGame
 {
@@ -13,6 +14,7 @@ namespace MiniGame
                 //隐藏没点亮之前的星星
                 gameObject.transform.Find("hide").gameObject.SetActive(false);
                 gameObject.transform.Find("show").gameObject.SetActive(true);
+                gameObject.transform.Find("starTrack").gameObject.GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 1), 1f);
             }
         }
     }
