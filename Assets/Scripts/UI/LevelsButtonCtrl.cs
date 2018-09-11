@@ -16,7 +16,7 @@ public class LevelsButtonCtrl : MonoBehaviour {
     bool CheckHasPlayed()
     {
         Debug.LogError("LevelsButtonCtrl::CheckHasPlayed: no implementation!!!");
-        return false;
+        return true;
     }
 
     private void OnClick()
