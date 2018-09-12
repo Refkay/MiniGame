@@ -32,34 +32,35 @@ namespace MiniGame
             mPlayerPositionDic.Add("1-2", new Vector3(31.4f, -18.8f, 0));
             mPlayerPositionDic.Add("1-3", new Vector3(56.8f, -36.9f, 0));
 
-            mPlayerPositionDic.Add("2-1", new Vector3(0f, -9f, 0f));
-            mPlayerPositionDic.Add("2-2", new Vector3(21.1f, 19, 0));
-            mPlayerPositionDic.Add("2-3", new Vector3(49.4f, 9.4f, 0));
-            mPlayerPositionDic.Add("2-4", new Vector3(21.7f, -29.6f, 0));
-            mPlayerPositionDic.Add("2-5", new Vector3(62.5f, -36.6f, 0));
+            mPlayerPositionDic.Add("2-1", new Vector3(-43.9f, 17.6f, 0));
+            mPlayerPositionDic.Add("2-2", new Vector3(-22.4f, 45.5f, 0));
+            mPlayerPositionDic.Add("2-3", new Vector3(6.1f, 34f, 0));
+            mPlayerPositionDic.Add("2-4", new Vector3(-22.2f, -3.13f, 0));
+            mPlayerPositionDic.Add("2-5", new Vector3(18.6f, -10.3f, 0));
 
-            mPlayerPositionDic.Add("3-1", new Vector3(0f, -9f, 0f));
-            mPlayerPositionDic.Add("3-2", new Vector3(30f, -9f, 0f));
-            mPlayerPositionDic.Add("3-3", new Vector3(60f, -9f, 0f));
-            mPlayerPositionDic.Add("3-4", new Vector3(90f, -9f, 0f));
-            mPlayerPositionDic.Add("3-5", new Vector3(120f, -9f, 0f));
+
+            mPlayerPositionDic.Add("3-1", new Vector3(-16f, -41.5f, 0f));
+            mPlayerPositionDic.Add("3-2", new Vector3(13.4f, -41.5f, 0f));
+            mPlayerPositionDic.Add("3-3", new Vector3(43.6f, -41.5f, 0f));
+            mPlayerPositionDic.Add("3-4", new Vector3(74.1f, -41.5f, 0f));
+            mPlayerPositionDic.Add("3-5", new Vector3(104.1f, -41.5f, 0f));
 
             //加载Camera每一小关的位置
             mCameraPositonDic.Add("1-1", new Vector3(0f, 0f, -10));
             mCameraPositonDic.Add("1-2", new Vector3(31.4f, -10.5f, -10));
             mCameraPositonDic.Add("1-3", new Vector3(56.8f, -29f, -10));
 
-            mCameraPositonDic.Add("2-1", new Vector3(0f, 0f, -10));
-            mCameraPositonDic.Add("2-2", new Vector3(21.1f, 28, -10));
-            mCameraPositonDic.Add("2-3", new Vector3(49.4f, 18.4f, -10));
-            mCameraPositonDic.Add("2-4", new Vector3(21.7f, -20.6f, -10));
-            mCameraPositonDic.Add("2-5", new Vector3(62.5f, -27.6f, -10));
+            mCameraPositonDic.Add("2-1", new Vector3(-43.9f, 26.6f, -10));
+            mCameraPositonDic.Add("2-2", new Vector3(-22.4f, 54.5f, -10));
+            mCameraPositonDic.Add("2-3", new Vector3(6.1f, 43f, -10));
+            mCameraPositonDic.Add("2-4", new Vector3(-22.2f, 6.13f, -10));
+            mCameraPositonDic.Add("2-5", new Vector3(18.6f, -1.3f, -10));
 
-            mCameraPositonDic.Add("3-1", new Vector3(0f, 0f, -10f));
-            mCameraPositonDic.Add("3-2", new Vector3(30f, 0f, -10f));
-            mCameraPositonDic.Add("3-3", new Vector3(60f, 0f, -10f));
-            mCameraPositonDic.Add("3-4", new Vector3(90f, 0f, -10f));
-            mCameraPositonDic.Add("3-5", new Vector3(120f, 0f, -10f));
+            mCameraPositonDic.Add("3-1", new Vector3(-16f, -32.5f, -10f));
+            mCameraPositonDic.Add("3-2", new Vector3(13.4f, -32.5f, -10f));
+            mCameraPositonDic.Add("3-3", new Vector3(43.6f, -32.5f, -10f));
+            mCameraPositonDic.Add("3-4", new Vector3(74.1f, -32.5f, -10f));
+            mCameraPositonDic.Add("3-5", new Vector3(104.1f, -32.5f, -10f));
         }
        
         /// <summary>

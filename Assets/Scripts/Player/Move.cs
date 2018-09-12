@@ -72,6 +72,9 @@ namespace MiniGame
         //小球重生时间
         private float mRebornTime = 0.7f;
 
+        //能否播放小球死亡动画
+        private bool canPlayDeadEffet = true;
+
         void Awake()
         {
             gameObject.transform.position = MissionManager.Instance.GetPlayerStartPos();
@@ -242,10 +245,11 @@ namespace MiniGame
             //播放死亡动画
             GameObject playDeadObj = new GameObject();
             //光球出摄像机外不播放死亡动画
-            if (!isOutOfCamera)
+            if (!isOutOfCamera && canPlayDeadEffet)
             {
                 mPlayerDead = GameObject.Instantiate(Resources.Load("Prefabs/PlayerDead")) as GameObject;
                 mPlayerDead.transform.position = gameObject.transform.position;
+                canPlayDeadEffet = false;
             }    
             //重置转向次数
             mTurnCount = 2;
@@ -270,7 +274,7 @@ namespace MiniGame
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
             this.transform.eulerAngles = new Vector3(0, 0, 0);
             isMoveable = true;
-
+            canPlayDeadEffet = true;
             //销毁小球死亡的GameObject
             if (mPlayerDead != null)
             {
