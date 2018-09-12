@@ -59,7 +59,10 @@ namespace MiniGame
 
             foreach (Transform child in mStoneContainer.transform)
             {
-                mStoneList.Add(child.gameObject);              
+                if (child.gameObject.activeSelf)
+                {
+                    mStoneList.Add(child.gameObject);
+                }
             }
         }
 
