@@ -75,6 +75,8 @@ namespace MiniGame
         //能否播放小球死亡动画
         private bool canPlayDeadEffet = true;
 
+        private float mInitialSpeed;
+
         void Awake()
         {
             gameObject.transform.position = MissionManager.Instance.GetPlayerStartPos();
@@ -93,6 +95,7 @@ namespace MiniGame
             mRg2D = GetComponent<Rigidbody2D>();
             mInitialPosition = transform.position;
             mInitialRotation = transform.rotation;
+            mInitialSpeed = mMoveSpeed;
             isSuccess = false;
         }
 
@@ -255,7 +258,7 @@ namespace MiniGame
             mTurnCount = 2;
             //这里是隐藏光球，因为Invoke或者协程需要gameObject的active为true的时候才能正常执行，所以这里想到用改透明度来隐藏光球
             gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
-            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
+            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);            
             Invoke("ResetPlayer", mRebornTime);
             if (playDeadObj != null)
             {
@@ -275,6 +278,7 @@ namespace MiniGame
             this.transform.eulerAngles = new Vector3(0, 0, 0);
             isMoveable = true;
             canPlayDeadEffet = true;
+            mMoveSpeed = mInitialSpeed;
             //销毁小球死亡的GameObject
             if (mPlayerDead != null)
             {
@@ -303,6 +307,11 @@ namespace MiniGame
             {
                 case "Damage":               
                     OnPlayerDead(false);       
+                    break;
+                case "Accelerate":
+                    //进入加速区域
+                    mRg2D.velocity = mMoveDirection * mAccSpeed;
+                    mMoveSpeed = mAccSpeed;
                     break;
                 default:
                     break;
@@ -344,7 +353,7 @@ namespace MiniGame
             {
                 case "Accelerate":
                     //进入加速区域
-                    mRg2D.velocity = mMoveDirection * mAccSpeed;
+                    //mRg2D.velocity = mMoveDirection * mAccSpeed;
                     break;
                 default:
                     break;
@@ -362,7 +371,8 @@ namespace MiniGame
             {
                 case "Accelerate":
                     //从加速区域出来，速度要恢复成原来的速度
-                    mRg2D.velocity = mMoveDirection * mMoveSpeed;
+                    mRg2D.velocity = mMoveDirection * mInitialSpeed;
+                    mMoveSpeed = mInitialSpeed;
                     break;
                 default:
                     break;
