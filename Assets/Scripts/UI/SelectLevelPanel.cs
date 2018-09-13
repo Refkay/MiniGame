@@ -41,6 +41,11 @@ namespace MiniGame
             list.Add(new SelectItemMessage("Level3-3", 3, 3));
             list.Add(new SelectItemMessage("Level3-4", 3, 4));
             list.Add(new SelectItemMessage("Level3-5", 3, 5));
+            list.Add(new SelectItemMessage("Level4-1", 4, 1));
+            list.Add(new SelectItemMessage("Level4-2", 4, 2));
+            list.Add(new SelectItemMessage("Level4-3", 4, 3));
+            list.Add(new SelectItemMessage("Level4-4", 4, 4));
+            list.Add(new SelectItemMessage("Level4-5", 4, 5));
             selectLevelView.SetMessages(list);
         }
 

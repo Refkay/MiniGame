@@ -15,6 +15,8 @@ public class Config
     public float dragTimeThreshold;
     // 单次拖动屏幕最大距离
     public float offsetThreshold;
+    // 加速后的速度
+    public float accSpeed;
 
     // 读取配置，如果配置文件不存在会返回空
     public static Config Load()
