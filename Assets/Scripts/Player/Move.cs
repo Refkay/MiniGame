@@ -52,7 +52,7 @@ namespace MiniGame
 
         //加速速度，进入加速区时Player的移动速度变成加速速度
         [SerializeField]
-        private float mAccSpeed = 3.0f;
+        private float mAccSpeed = 10.0f;
 
         //光球初始化位置
         private Vector3 mInitialPosition;
@@ -76,6 +76,8 @@ namespace MiniGame
         private bool canPlayDeadEffet = true;
 
         private float mInitialSpeed;
+
+        private bool canAccelerate = false;
 
         void Awake()
         {
@@ -201,6 +203,7 @@ namespace MiniGame
                 mDragTime = 0;
                 mOffsetDistance = 0;
                 //isMoveable = false;
+                canAccelerate = true;
                 mTurnCount--;
             }
         }
@@ -222,6 +225,7 @@ namespace MiniGame
                 //mRg2d.AddForce(moveDirection * mMoveSpeed);
                 mRg2D.velocity = mMoveDirection * mMoveSpeed;
                 //isMoveable = true;
+                canAccelerate = true;
                 mTurnCount--;
             }
         }       
@@ -259,7 +263,8 @@ namespace MiniGame
             mTurnCount = 2;
             //这里是隐藏光球，因为Invoke或者协程需要gameObject的active为true的时候才能正常执行，所以这里想到用改透明度来隐藏光球
             gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
-            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);            
+            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
+            canAccelerate = false;        
             Invoke("ResetPlayer", mRebornTime);
             if (playDeadObj != null)
             {
@@ -279,6 +284,7 @@ namespace MiniGame
             this.transform.eulerAngles = new Vector3(0, 0, 0);
             isMoveable = true;
             canPlayDeadEffet = true;
+            canAccelerate = false;
             mMoveSpeed = mInitialSpeed;
             //销毁小球死亡的GameObject
             if (mPlayerDead != null)
@@ -293,6 +299,8 @@ namespace MiniGame
             yield return new WaitForSeconds(1.2f);
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+            canAccelerate = false;
+            mMoveSpeed = mInitialSpeed;
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
             //发送消息到GameSystem，小关卡完成，通知进入下一关卡      
             MessageBus.Send(new OnSubLevelCompleteMsg());
@@ -309,11 +317,12 @@ namespace MiniGame
                 case "Damage":               
                     OnPlayerDead(false);       
                     break;
-                case "Accelerate":
-                    //进入加速区域
-                    mRg2D.velocity = mMoveDirection * mAccSpeed;
-                    mMoveSpeed = mAccSpeed;
-                    break;
+                //case "Accelerate":
+                //    //进入加速区域
+                //    mMoveDirection.Normalize();
+                //    mRg2D.velocity = mMoveDirection * mAccSpeed;
+                //    mMoveSpeed = mAccSpeed;
+                //    break;
                 default:
                     break;
             }
@@ -354,7 +363,11 @@ namespace MiniGame
             {
                 case "Accelerate":
                     //进入加速区域
-                    //mRg2D.velocity = mMoveDirection * mAccSpeed;
+                    if (canAccelerate)
+                    {
+                        mMoveDirection.Normalize();
+                        mRg2D.velocity = mMoveDirection * mAccSpeed;
+                    }          
                     break;
                 default:
                     break;
@@ -372,8 +385,17 @@ namespace MiniGame
             {
                 case "Accelerate":
                     //从加速区域出来，速度要恢复成原来的速度
-                    mRg2D.velocity = mMoveDirection * mInitialSpeed;
-                    mMoveSpeed = mInitialSpeed;
+                    if (canAccelerate)
+                    {
+                        mMoveDirection.Normalize();
+                        mRg2D.velocity = mMoveDirection * mMoveSpeed;
+                    }                 
+                    break;
+                case "CameraArea":
+                    if (!isSuccess)
+                    {
+                        OnPlayerDead(true);
+                    }
                     break;
                 default:
                     break;
@@ -393,12 +415,8 @@ namespace MiniGame
         /// </summary>
         private void OnBecameInvisible()
         {               
-            if (!isSuccess)
-            {
-                OnPlayerDead(true);
-            }     
+            
         }
-
     }
 
 }

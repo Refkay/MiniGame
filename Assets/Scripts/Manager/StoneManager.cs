@@ -11,6 +11,8 @@ namespace MiniGame
     public class StoneManager : MonoBehaviour
     {
         public static StoneManager Instance;
+
+        public int DestoryStoneNum;
         //石头父节点
         private GameObject mStoneContainer;
 
@@ -32,6 +34,8 @@ namespace MiniGame
         //关卡失败，所有的石头都显示出来
         private bool OnSubLevelFailed(OnSubLevelFailedMsg msg)
         {
+            ClearStoneList();
+            SetStoneList(true);
             for(int i = 0; i < mStoneList.Count; i++)
             {
                 if (!mStoneList[i].activeSelf)
@@ -51,7 +55,7 @@ namespace MiniGame
         }   
 
         //获取当前小关的石头，保存到list里面
-        private void SetStoneList()
+        private void SetStoneList(bool addAll)
         {
             //找到对应的小关的
             mStoneContainer = GetTargetGameObjectByName("StoneContainer"
@@ -59,10 +63,17 @@ namespace MiniGame
 
             foreach (Transform child in mStoneContainer.transform)
             {
-                if (child.gameObject.activeSelf)
+                if (addAll)
                 {
                     mStoneList.Add(child.gameObject);
                 }
+                else
+                {
+                    if (child.gameObject.activeSelf)
+                    {
+                        mStoneList.Add(child.gameObject);
+                    }
+                } 
             }
         }
 
@@ -87,7 +98,7 @@ namespace MiniGame
         public  GameObject GetRadomStoneTrasform()
         {
             ClearStoneList();
-            SetStoneList();
+            SetStoneList(false);
             int radomNum = Random.Range(0, mStoneList.Count);
             Debug.Log("石头LIst:" + mStoneList.Count + "\n随机数：" + radomNum);
             return mStoneList[radomNum];          
