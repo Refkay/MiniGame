@@ -41,8 +41,6 @@ namespace MiniGame
                     this.transform.position = targetVector3;
                 }
             }
-
-
         }
     }
 }
