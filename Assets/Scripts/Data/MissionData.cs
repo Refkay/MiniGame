@@ -26,6 +26,7 @@ namespace MiniGame
             mMissionDataDic.Add(1, 3);
             mMissionDataDic.Add(2, 5);
             mMissionDataDic.Add(3, 5);
+            mMissionDataDic.Add(4, 5);
 
             //加载Player每一小关的起始位置信息
             mPlayerPositionDic.Add("1-1", new Vector3(0f, -9f, 0f));
@@ -38,12 +39,17 @@ namespace MiniGame
             mPlayerPositionDic.Add("2-4", new Vector3(-22.2f, -3.13f, 0));
             mPlayerPositionDic.Add("2-5", new Vector3(18.6f, -10.3f, 0));
 
-
             mPlayerPositionDic.Add("3-1", new Vector3(-16f, -41.5f, 0f));
             mPlayerPositionDic.Add("3-2", new Vector3(13.4f, -41.5f, 0f));
             mPlayerPositionDic.Add("3-3", new Vector3(43.6f, -41.5f, 0f));
             mPlayerPositionDic.Add("3-4", new Vector3(74.1f, -41.5f, 0f));
             mPlayerPositionDic.Add("3-5", new Vector3(104.1f, -41.5f, 0f));
+
+            mPlayerPositionDic.Add("4-1", new Vector3(-16f, -41.5f, 0f));
+            mPlayerPositionDic.Add("4-2", new Vector3(13.4f, -41.5f, 0f));
+            mPlayerPositionDic.Add("4-3", new Vector3(43.6f, -41.5f, 0f));
+            mPlayerPositionDic.Add("4-4", new Vector3(74.1f, -41.5f, 0f));
+            mPlayerPositionDic.Add("4-5", new Vector3(104.1f, -41.5f, 0f));
 
             //加载Camera每一小关的位置
             mCameraPositonDic.Add("1-1", new Vector3(0f, 0f, -10));
@@ -61,6 +67,12 @@ namespace MiniGame
             mCameraPositonDic.Add("3-3", new Vector3(43.6f, -32.5f, -10f));
             mCameraPositonDic.Add("3-4", new Vector3(74.1f, -32.5f, -10f));
             mCameraPositonDic.Add("3-5", new Vector3(104.1f, -32.5f, -10f));
+
+            mCameraPositonDic.Add("4-1", new Vector3(-16f, -32.5f, -10f));
+            mCameraPositonDic.Add("4-2", new Vector3(13.4f, -32.5f, -10f));
+            mCameraPositonDic.Add("4-3", new Vector3(43.6f, -32.5f, -10f));
+            mCameraPositonDic.Add("4-4", new Vector3(74.1f, -32.5f, -10f));
+            mCameraPositonDic.Add("4-5", new Vector3(104.1f, -32.5f, -10f));
         }
        
         /// <summary>

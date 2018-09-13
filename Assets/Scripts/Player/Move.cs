@@ -23,7 +23,7 @@ namespace MiniGame
 
         private Vector3 mMoveDirection;
 
-        //物体移动的时间
+        //物体移动的速度
         [SerializeField]
         private float mMoveSpeed = 7.0f;
 
@@ -87,6 +87,7 @@ namespace MiniGame
                 mMoveSpeed = config.moveSpeed;
                 mDragTimeThreshold = config.dragTimeThreshold;
                 mOffsetThreshold = config.offsetThreshold;
+                mAccSpeed = config.accSpeed;
             }        
         }
 

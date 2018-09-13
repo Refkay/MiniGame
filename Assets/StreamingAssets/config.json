@@ -1,5 +1,6 @@
 {
-    "moveSpeed": 7,
-    "dragTimeThreshold": 0.5,
-    "offsetThreshold": 100
+  "moveSpeed": 7,
+  "dragTimeThreshold": 0.5,
+  "offsetThreshold": 100,
+  "accSpeed": 10
 }
