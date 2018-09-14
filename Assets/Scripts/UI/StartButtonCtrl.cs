@@ -19,10 +19,9 @@ public class StartButtonCtrl : MonoBehaviour
         }
     }
 
-    // TODO: 读取最近的关卡
     void LoadRecentScene()
     {
-        Debug.LogError("StartButtonCtrl::LoadRecentScene: no implementation!!!");
+        SceneManager.LoadSceneAsync("Level" + MiniGame.PlayerProgress.Instance.RecentMainLevel + "-" + "1");
     }
 
     // 读取故事关
@@ -31,10 +30,9 @@ public class StartButtonCtrl : MonoBehaviour
         SceneManager.LoadScene("Level0Story");
     }
 
-    // TODO: 检查是否玩过
     bool CheckHasPlayed()
     {
-        Debug.LogError("StartButtonCtrl::CheckHasPlayed: no implementation!!!");
-        return false;
+        var p = MiniGame.PlayerProgress.Instance;
+        return p.HasPlayed && p.RecentMainLevel > 0 && p.RecentSubLevel > 0;
     }
 }

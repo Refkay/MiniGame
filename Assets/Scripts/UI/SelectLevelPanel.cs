@@ -27,26 +27,32 @@ namespace MiniGame
 
         private void InitEvent()
         {         
-            List<SelectItemMessage> list = new List<SelectItemMessage>();
-            list.Add(new SelectItemMessage("Level1-1", 1, 1));
-            list.Add(new SelectItemMessage("Level1-2", 1, 2));
-            list.Add(new SelectItemMessage("Level1-3", 1, 3));
-            list.Add(new SelectItemMessage("Level2-1", 2, 1));
-            list.Add(new SelectItemMessage("Level2-2", 2, 2));
-            list.Add(new SelectItemMessage("Level2-3", 2, 3));
-            list.Add(new SelectItemMessage("Level2-4", 2, 4));
-            list.Add(new SelectItemMessage("Level2-5", 2, 5));
-            list.Add(new SelectItemMessage("Level3-1", 3, 1));
-            list.Add(new SelectItemMessage("Level3-2", 3, 2));
-            list.Add(new SelectItemMessage("Level3-3", 3, 3));
-            list.Add(new SelectItemMessage("Level3-4", 3, 4));
-            list.Add(new SelectItemMessage("Level3-5", 3, 5));
-            list.Add(new SelectItemMessage("Level4-1", 4, 1));
-            list.Add(new SelectItemMessage("Level4-2", 4, 2));
-            list.Add(new SelectItemMessage("Level4-3", 4, 3));
-            list.Add(new SelectItemMessage("Level4-4", 4, 4));
-            list.Add(new SelectItemMessage("Level4-5", 4, 5));
-            selectLevelView.SetMessages(list);
+            selectLevelView.SetMessages(GetLevelsList());
+        }
+
+        private int[] levelData = new int[] { 3, 5, 5, 5 };
+
+        private List<SelectItemMessage> GetLevelsList()
+        {
+            var list = new List<SelectItemMessage>();
+            int mainLv = PlayerProgress.Instance.HighestMainLevel;
+            int subLv = PlayerProgress.Instance.HighestSubLevel;
+            for (int i = 1; i <= levelData.Length; i++)
+            {
+                for (int j = 1; j <= levelData[i - 1]; j++)
+                {
+                    list.Add(new SelectItemMessage(string.Format("Level{0}-{1}", i, j), i, j));
+                    if (mainLv == i && subLv == j)
+                    {
+                        break;
+                    }
+                }
+                if (mainLv == i)
+                {
+                    break;
+                }
+            }
+            return list;
         }
 
     }

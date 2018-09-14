@@ -75,7 +75,7 @@ namespace MiniGame
         private bool OnGameComplete(OnGameCompleteMsg msg)
         {
             //TODO : 整个游戏通关，这里先随便给个提示
-            
+            SceneManager.LoadSceneAsync("MainMenu");
             return false;
         }
 
