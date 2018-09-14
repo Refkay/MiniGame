@@ -75,9 +75,13 @@ namespace MiniGame
         //能否播放小球死亡动画
         private bool canPlayDeadEffet = true;
 
+        //初始化速度
         private float mInitialSpeed;
 
+        //能否加速
         private bool canAccelerate = false;
+
+        private bool canTurnInfinite;
 
         void Awake()
         {
@@ -99,6 +103,7 @@ namespace MiniGame
             mInitialPosition = transform.position;
             mInitialRotation = transform.rotation;
             mInitialSpeed = mMoveSpeed;
+            canTurnInfinite = MissionData.GetLevelTurnInfinite(MissionManager.Instance.mCurLevel, MissionManager.Instance.mCurSubLevel);
             isSuccess = false;
         }
 
@@ -148,6 +153,7 @@ namespace MiniGame
         private bool OnPlayerMove(OnPlayerMoveMsg msg)
         {
             isSuccess = false;
+            canTurnInfinite = MissionData.GetLevelTurnInfinite(MissionManager.Instance.mCurLevel, MissionManager.Instance.mCurSubLevel);
             mInitialPosition = msg.mTargetPos;
             if (msg.isMoveDirectly) {
                 gameObject.transform.position = msg.mTargetPos;
@@ -159,12 +165,12 @@ namespace MiniGame
                 {
                     gameObject.GetComponent<BoxCollider2D>().enabled = true;
                     isMoveable = true;
+                    mTurnCount = 2;
                     this.transform.eulerAngles = new Vector3(0, 0, 0);
                 });
             }
-            //小球的初始化位置变为下一个位置
-         
-         
+            //小球的初始化位置变为下一个位置         
+
             return false;
         }
 
@@ -197,14 +203,17 @@ namespace MiniGame
             //滑动的时候超过时间的阈值或者超过距离的阈值，球也要转向      
             if (((mDragTime > mDragTimeThreshold) || (mOffsetDistance > mOffsetThreshold)) && isMoveable )
             {
-                SetPlayerAngle(mMoveDirection);
-                mMoveDirection.Normalize();
-                mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                mDragTime = 0;
-                mOffsetDistance = 0;
-                //isMoveable = false;
-                canAccelerate = true;
-                mTurnCount--;
+                if (canTurnInfinite || mTurnCount > 0)
+                {
+                    SetPlayerAngle(mMoveDirection);
+                    mMoveDirection.Normalize();
+                    mRg2D.velocity = mMoveDirection * mMoveSpeed;
+                    mDragTime = 0;
+                    mOffsetDistance = 0;
+                    //isMoveable = false;
+                    canAccelerate = true;
+                    mTurnCount--;
+                }            
             }
         }
 
@@ -219,14 +228,17 @@ namespace MiniGame
             //必须滑动到一定的距离才能转向
             if (mMoveDirection.magnitude >= mMinoffset && isMoveable)
             {
-                mRg2D.Sleep();
-                SetPlayerAngle(mMoveDirection);
-                mMoveDirection.Normalize();
-                //mRg2d.AddForce(moveDirection * mMoveSpeed);
-                mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                //isMoveable = true;
-                canAccelerate = true;
-                mTurnCount--;
+                if (canTurnInfinite || mTurnCount > 0)
+                {
+                    mRg2D.Sleep();
+                    SetPlayerAngle(mMoveDirection);
+                    mMoveDirection.Normalize();
+                    //mRg2d.AddForce(moveDirection * mMoveSpeed);
+                    mRg2D.velocity = mMoveDirection * mMoveSpeed;
+                    //isMoveable = true;
+                    canAccelerate = true;
+                    mTurnCount--;
+                }            
             }
         }       
 

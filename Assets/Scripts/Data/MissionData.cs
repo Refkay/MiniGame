@@ -16,6 +16,9 @@ namespace MiniGame
         //保存每一关相机的起始位置的Dictionary， Key是 string currentLevel-currentSubLevel （1-1,1-2等）
         public static Dictionary<string, Vector3> mCameraPositonDic = new Dictionary<string, Vector3>();
 
+        //保存每一关是否可以无限次转向的Dictionary
+        public static Dictionary<string, bool> mTurnInfiniteDic = new Dictionary<string, bool>();
+
         /// <summary>
         /// 加载每个小关卡的位置，其实就是保存位置信息到Dictionary里面
         /// TODO ： 这里为了测试先这么写，后续可以再改进数据读取方式
@@ -73,8 +76,32 @@ namespace MiniGame
             mCameraPositonDic.Add("4-3", new Vector3(43.6f, -32.5f, -10f));
             mCameraPositonDic.Add("4-4", new Vector3(74.1f, -32.5f, -10f));
             mCameraPositonDic.Add("4-5", new Vector3(104.1f, -32.5f, -10f));
+
+            //加载每一关是否可以无限次转向的信息
+            mTurnInfiniteDic.Add("1-1", false);
+            mTurnInfiniteDic.Add("1-2", false);
+            mTurnInfiniteDic.Add("1-3", false);
+
+            mTurnInfiniteDic.Add("2-1", false);
+            mTurnInfiniteDic.Add("2-2", false);
+            mTurnInfiniteDic.Add("2-3", false);
+            mTurnInfiniteDic.Add("2-4", false);
+            mTurnInfiniteDic.Add("2-5", false);
+
+            mTurnInfiniteDic.Add("3-1", false);
+            mTurnInfiniteDic.Add("3-2", false);
+            mTurnInfiniteDic.Add("3-3", false);
+            mTurnInfiniteDic.Add("3-4", false);
+            mTurnInfiniteDic.Add("3-5", false);
+
+            mTurnInfiniteDic.Add("4-1", false);
+            mTurnInfiniteDic.Add("4-2", false);
+            mTurnInfiniteDic.Add("4-3", false);
+            mTurnInfiniteDic.Add("4-4", false);
+            mTurnInfiniteDic.Add("4-5", false);
+
         }
-       
+
         /// <summary>
         /// 取得大关卡总数
         /// </summary>
@@ -120,6 +147,20 @@ namespace MiniGame
             return position;
         }
 
+        //获取某个关卡能否无限转向
+        public static bool GetLevelTurnInfinite(int currentLevel, int currentSubLevel)
+        {
+            bool canTrunInfinite = false;
+            foreach (KeyValuePair<string, bool> kvp in mTurnInfiniteDic)
+            {
+                if (kvp.Key == currentLevel + "-" + currentSubLevel)
+                {
+                    canTrunInfinite = kvp.Value;
+                    break;
+                }
+            }
+            return canTrunInfinite;
+        }
     }
 }
 
