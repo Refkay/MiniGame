@@ -10,7 +10,7 @@ namespace MiniGame
         // Use this for initialization
         void Start()
         {
-            levelName.text = "Level " + MissionManager.Instance.mCurLevel;                      
+            levelName.text = "Level " + MissionManager.Instance.mCurLevel + "-" + MissionManager.Instance.mCurSubLevel;                      
          }
       
     }

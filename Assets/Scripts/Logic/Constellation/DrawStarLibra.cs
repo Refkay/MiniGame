@@ -8,9 +8,9 @@ using DG.Tweening;
 namespace MiniGame
 {
     /// <summary>
-    /// 绘制星座图的类
+    /// 绘制天秤座
     /// </summary>
-    public class DrawStarTrack : MonoBehaviour
+    public class DrawStarLibra : MonoBehaviour
     {
         public Transform[] positions;
         public GameObject cameraBg;
@@ -20,7 +20,7 @@ namespace MiniGame
         private Vector3 targetPosition;
         private Vector3 mIniCameraBgScale;
         //绘制线的时间
-        private float lineTime = 2.6f;
+        private float lineTime = 2.0f;
         //绘制线的速度
         private float lineSpeed = 2.0f;
         //判断能否绘制下一个点
@@ -40,14 +40,14 @@ namespace MiniGame
         private void SceneReset()
         {
             _text1.color = _hideColor;
-            _text2.color = _hideColor;          
+            _text2.color = _hideColor;
         }
 
         private void HideCanvas()
         {
             _image1.gameObject.SetActive(false);
             _text1.gameObject.SetActive(false);
-            _text2.gameObject.SetActive(false);          
+            _text2.gameObject.SetActive(false);
         }
 
         void Start()
@@ -104,40 +104,61 @@ namespace MiniGame
         /// </summary>
         public void DrawAllStarTrack()
         {
-            StartCoroutine(DrawAllLine());         
-        } 
+            StartCoroutine(DrawAllLine());
+        }
+
+        private void DrawOneLine(Vector3 starPos, Vector3 targetPos)
+        {
+            GameObject go = GameObject.Instantiate(Resources.Load("Prefabs/LineEff")) as GameObject;
+            go.transform.parent = gameObject.transform;
+            go.transform.position = starPos;
+            TrailAutoMoveComp t = go.AddComponent<TrailAutoMoveComp>();
+            t.Init(targetPos, lineTime);
+        }
 
         IEnumerator DrawAllLine()
         {
             yield return new WaitForSeconds(0.3f);
             starPosition = positions[0].position;
-            for (int i = 1; i < positions.Length; i ++)
+            for (int i = 1; i < positions.Length; i++)
             {
+                if (i == 4)
+                {
+                    targetPosition = positions[4].position;
+                    DrawOneLine(positions[3].position, targetPosition);
+                    DrawOneLine(positions[2].position, targetPosition);
+                    Vector3 nextCameraPos = new Vector3((positions[2].position.x + positions[4].position.x) / 2,
+                        (positions[2].position.y + positions[4].position.y) / 2, -10);
+                    Vector3 tscale = new Vector3(mIniCameraBgScale.x * 3, mIniCameraBgScale.y * 3, 1);
+                    cameraBg.gameObject.transform.DOScale(tscale, lineTime);
+                    mainCamera.transform.DOMove(nextCameraPos, lineTime);
+                    mainCamera.DOOrthoSize(3.0f, lineTime);
+                    starPosition = targetPosition;
+                    yield return new WaitForSeconds(lineTime - 0.1f);
+                    continue;
+                }
                 targetPosition = positions[i].position;
-                GameObject go = GameObject.Instantiate(Resources.Load("Prefabs/LineEff")) as GameObject;
-                go.transform.parent = gameObject.transform;
-                go.transform.position = starPosition;               
-                TrailAutoMoveComp t = go.AddComponent<TrailAutoMoveComp>();
-                t.Init(targetPosition, lineTime);          
+                DrawOneLine(starPosition, targetPosition);
                 Vector3 nextCameraPosition = new Vector3(targetPosition.x, targetPosition.y, -10);
                 mainCamera.transform.DOMove(nextCameraPosition, lineTime);
                 starPosition = targetPosition;
+
                 yield return new WaitForSeconds(lineTime - 0.1f);
-            }        
+            }
             bgImage.gameObject.GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 1), 5.5f);
-            mainCamera.transform.DOMove(new Vector3(0, 0, -10), 4.0f);
-            mainCamera.DOOrthoSize(5.0f, 4.0f);
+            mainCamera.transform.DOMove(new Vector3(0, 0, -10), 3.0f);
+            mainCamera.DOOrthoSize(5.0f, 3.0f);
 
             Vector3 targetScale = new Vector3(mIniCameraBgScale.x * 5, mIniCameraBgScale.y * 5, 1);
-            cameraBg.gameObject.transform.DOScale(targetScale, 4.0f);
-            yield return new WaitForSeconds(4.0f);
-
-            mainCamera.DOOrthoSize(1.0f, 4.0f);       
+            cameraBg.gameObject.transform.DOScale(targetScale, 3.0f);
             yield return new WaitForSeconds(3.0f);
+
+            mainCamera.DOOrthoSize(1.0f, 3.0f);
+            yield return new WaitForSeconds(2.5f);
             //进入下一个关卡
             GameManagers.mMissionManager.GoToNextLevel();
             yield return null;
-        }    
+        }
     }
 
 }
