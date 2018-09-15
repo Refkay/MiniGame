@@ -9,7 +9,7 @@ namespace MiniGame
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.tag == "Player")
-            {
+            {      
                 //展示到达终点的动画
                 desObj = GameObject.Instantiate(Resources.Load("Prefabs/ArriveDes")) as GameObject;
                 desObj.transform.position = gameObject.transform.position;

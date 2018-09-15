@@ -74,6 +74,8 @@ namespace MiniGame
             isAniComplete = false;
             //这里播放特效
             UFO.SetActive(true);
+            //播放音乐
+            AudioManager.Instance.PlayOneShotIndex(4);
             Animator animator = UFO.GetComponent<Animator>();
             animator.enabled = true;
             animator.Play("UFOAni", -1, 0.0f);          

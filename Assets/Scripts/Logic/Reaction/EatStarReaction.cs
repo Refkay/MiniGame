@@ -22,6 +22,8 @@ namespace MiniGame
         {
             if (collision.gameObject.tag == "Player")
             {
+                //播放音乐
+                AudioManager.Instance.PlayOneShotIndex(4);
                 MessageBus.Send(new OnAddStarMsg());
                 gameObject.SetActive(false);
             }

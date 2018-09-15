@@ -83,6 +83,8 @@ namespace MiniGame
 
         private bool canTurnInfinite;
 
+        private bool canCountDownTurn = true;
+
         void Awake()
         {
             gameObject.transform.position = MissionManager.Instance.GetPlayerStartPos();
@@ -166,6 +168,7 @@ namespace MiniGame
                     gameObject.GetComponent<BoxCollider2D>().enabled = true;
                     isMoveable = true;
                     mTurnCount = 2;
+                    canCountDownTurn = true;
                     this.transform.eulerAngles = new Vector3(0, 0, 0);
                 });
             }
@@ -205,6 +208,7 @@ namespace MiniGame
             {
                 if (canTurnInfinite || mTurnCount > 0)
                 {
+                    AudioManager.Instance.PlayOneShotIndex(6);
                     SetPlayerAngle(mMoveDirection);
                     mMoveDirection.Normalize();
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
@@ -212,7 +216,10 @@ namespace MiniGame
                     mOffsetDistance = 0;
                     //isMoveable = false;
                     canAccelerate = true;
-                    mTurnCount--;
+                    if (canCountDownTurn)
+                    {
+                        mTurnCount--;
+                    }       
                 }            
             }
         }
@@ -230,6 +237,7 @@ namespace MiniGame
             {
                 if (canTurnInfinite || mTurnCount > 0)
                 {
+                    AudioManager.Instance.PlayOneShotIndex(6);
                     mRg2D.Sleep();
                     SetPlayerAngle(mMoveDirection);
                     mMoveDirection.Normalize();
@@ -237,8 +245,11 @@ namespace MiniGame
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
                     //isMoveable = true;
                     canAccelerate = true;
-                    mTurnCount--;
-                }            
+                    if (canCountDownTurn)
+                    {
+                        mTurnCount--;
+                    }
+                }
             }
         }       
 
@@ -259,9 +270,11 @@ namespace MiniGame
         /// </summary>
         private void OnPlayerDead(bool isOutOfCamera)
         {
-            //重置位置          
+            //重置位置                      
             mRg2D.Sleep();
             isMoveable = false;
+            canCountDownTurn = false;
+            //播放死亡音效       
             //播放死亡动画
             GameObject playDeadObj = new GameObject();
             //光球出摄像机外不播放死亡动画
@@ -270,13 +283,16 @@ namespace MiniGame
                 mPlayerDead = GameObject.Instantiate(Resources.Load("Prefabs/PlayerDead")) as GameObject;
                 mPlayerDead.transform.position = gameObject.transform.position;
                 canPlayDeadEffet = false;
+                AudioManager.Instance.PlayOneShotIndex(7);
             }    
-            //重置转向次数
-            mTurnCount = 2;
+            else
+            {
+                AudioManager.Instance.PlayOneShotIndex(10);
+            }
             //这里是隐藏光球，因为Invoke或者协程需要gameObject的active为true的时候才能正常执行，所以这里想到用改透明度来隐藏光球
             gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
-            canAccelerate = false;        
+            canAccelerate = false;         
             Invoke("ResetPlayer", mRebornTime);
             if (playDeadObj != null)
             {
@@ -303,6 +319,9 @@ namespace MiniGame
             {
                 Destroy(mPlayerDead);
             }
+            //重置转向次数
+            mTurnCount = 2;
+            canCountDownTurn = true;
             MessageBus.Send(new OnSubLevelFailedMsg());
         }
 
@@ -326,7 +345,7 @@ namespace MiniGame
             string tag = collision.gameObject.tag;
             switch (tag)
             {
-                case "Damage":               
+                case "Damage":                 
                     OnPlayerDead(false);       
                     break;
                 //case "Accelerate":
@@ -352,6 +371,8 @@ namespace MiniGame
                 case "Destination":
                     //通过当前小关卡
                     Debug.Log("On SubLevel Complete");
+                    AudioManager.Instance.PlayOneShotIndex(8);
+                    canCountDownTurn = false;
                     isSuccess = true;
                     isMoveable = false;
                     GetComponent<Rigidbody2D>().Sleep();
