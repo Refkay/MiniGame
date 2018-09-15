@@ -35,6 +35,8 @@ public class Level1StoryController : MonoBehaviour
     private Text _text6;
     [SerializeField]
     private Text _text7;
+    [SerializeField]
+    private Text _text8;
 
     private Color _showColor = new Color(1, 1, 1, 1);
     private Color _hideColor = new Color(0, 0, 0, 0);
@@ -57,6 +59,7 @@ public class Level1StoryController : MonoBehaviour
         _text5.color = _hideColor;
         _text6.color = _hideColor;
         _text7.color = _hideColor;
+        _text8.color = _hideColor;
     }
 
     private void Shot1()
@@ -77,8 +80,8 @@ public class Level1StoryController : MonoBehaviour
     {
         _listenFlag = false;
         _text2.color = _hideColor;
-        _mainCamera.transform.position = new Vector3(0, -3.0f, -10);
-        _image1.DOColor(_showColor, 4.0f).OnComplete(_resetFlag);
+        _mainCamera.transform.position = new Vector3(0, -2.0f, -10);
+        _image1.DOColor(_showColor, 3.0f).OnComplete(_resetFlag);
     }
 
     private void Shot4()
@@ -92,7 +95,7 @@ public class Level1StoryController : MonoBehaviour
         _listenFlag = false;      
         _text3.DOColor(_hideColor, 1.0f);
         _mainCamera.transform.DOMove(new Vector3(0, -0, -10), 3.0f);
-        _mainCamera.DOOrthoSize(8.0f, 4.0f).OnComplete(_resetFlag);
+        _mainCamera.DOOrthoSize(7.0f, 3.0f).OnComplete(_resetFlag);
     }
 
     private void Shot6()
@@ -100,7 +103,7 @@ public class Level1StoryController : MonoBehaviour
         _listenFlag = false;
         SceneReset();
         _mainCamera.orthographicSize = 5.0f;
-        _image2.DOColor(_showColor, 1.0f).OnComplete(_resetFlag);
+        _image2.DOColor(_showColor, 2.8f).OnComplete(_resetFlag);
 
     }
 
@@ -114,38 +117,50 @@ public class Level1StoryController : MonoBehaviour
     {
         _listenFlag = false;
         SceneReset();
-        _mainCamera.transform.position = new Vector3(-2.5f, 2.0f, -10);
-        _image3.DOColor(_showColor, 1.0f).OnComplete(_resetFlag);
+        _mainCamera.transform.position = new Vector3(-0.74f, 1f, -10);
+        _image3.DOColor(_showColor, 2.8f).OnComplete(_resetFlag);
     }
 
     private void Shot9()
     {
         _listenFlag = false;
-        _mainCamera.transform.DOMove(new Vector3(1, -2, -10), 3.0f);
+        _mainCamera.DOOrthoSize(7.0f, 3.0f);
+        _mainCamera.transform.DOMove(new Vector3(0, 0, -10), 3.0f);
         _text5.DOColor(_showColor, 2.0f).OnComplete(_resetFlag);
     }
 
     private void Shot10()
     {
         _listenFlag = false;
-        SceneReset();
-        _mainCamera.orthographicSize = 1.0f;
-        _mainCamera.transform.position = new Vector3(0, 0, -10);
-        _image4.DOColor(_showColor, 1.0f).OnComplete(()=> _mainCamera.DOOrthoSize(5.0f, 3.0f).OnComplete(_resetFlag));
+        _text5.DOColor(_hideColor, 1.0f);
+        _text6.DOColor(_showColor, 1.5f).OnComplete(_resetFlag);
     }
 
     private void Shot11()
     {
         _listenFlag = false;
-        _text6.DOColor(_showColor, 2.0f).OnComplete(() => _text6.DOColor(_showColor, 1.0f).OnComplete(_resetFlag));
+        SceneReset();
+        _mainCamera.orthographicSize = 3.0f;
+        _mainCamera.transform.position = new Vector3(0.75f, -1.33f, -10);
+        _image4.DOColor(_showColor, 1.5f).OnComplete(()=> {
+            _text7.DOColor(_showColor, 2.0f);
+            _mainCamera.transform.DOMove(new Vector3(0, -0, -10), 2.5f);
+            _mainCamera.DOOrthoSize(5.0f, 2.5f).OnComplete(_resetFlag);         
+        });
     }
 
     private void Shot12()
     {
         _listenFlag = false;
-        _text6.DOColor(_hideColor, 1.0f);
-        _text7.DOColor(_showColor, 1.5f).OnComplete(_resetFlag);
+        _text7.DOColor(_hideColor, 0.7f).OnComplete(() => _text8.DOColor(_showColor, 1.2f).OnComplete(_resetFlag));
     }
+
+    //private void Shot13()
+    //{
+    //    _listenFlag = false;
+    //    _text6.DOColor(_hideColor, 1.0f);
+    //    _text7.DOColor(_showColor, 1.5f).OnComplete(_resetFlag);
+    //}
 
     private void SceneChange()
     {
@@ -221,6 +236,10 @@ public class Level1StoryController : MonoBehaviour
             {
                 SceneChange();
             }
+            //else if (_shotIndex == 13)
+            //{
+              
+            //}
             _shotIndex++;
         }
     }
