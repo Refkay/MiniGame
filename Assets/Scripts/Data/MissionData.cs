@@ -78,28 +78,27 @@ namespace MiniGame
             mCameraPositonDic.Add("4-5", new Vector3(104.1f, -32.5f, -10f));
 
             //加载每一关是否可以无限次转向的信息
-            mTurnInfiniteDic.Add("1-1", false);
-            mTurnInfiniteDic.Add("1-2", false);
-            mTurnInfiniteDic.Add("1-3", false);
+            mTurnInfiniteDic.Add("1-1", true);
+            mTurnInfiniteDic.Add("1-2", true);
+            mTurnInfiniteDic.Add("1-3", true);
 
-            mTurnInfiniteDic.Add("2-1", false);
-            mTurnInfiniteDic.Add("2-2", false);
-            mTurnInfiniteDic.Add("2-3", false);
-            mTurnInfiniteDic.Add("2-4", false);
-            mTurnInfiniteDic.Add("2-5", false);
+            mTurnInfiniteDic.Add("2-1", true);
+            mTurnInfiniteDic.Add("2-2", true);
+            mTurnInfiniteDic.Add("2-3", true);
+            mTurnInfiniteDic.Add("2-4", true);
+            mTurnInfiniteDic.Add("2-5", true);
 
-            mTurnInfiniteDic.Add("3-1", false);
-            mTurnInfiniteDic.Add("3-2", false);
-            mTurnInfiniteDic.Add("3-3", false);
-            mTurnInfiniteDic.Add("3-4", false);
-            mTurnInfiniteDic.Add("3-5", false);
+            mTurnInfiniteDic.Add("3-1", true);
+            mTurnInfiniteDic.Add("3-2", true);
+            mTurnInfiniteDic.Add("3-3", true);
+            mTurnInfiniteDic.Add("3-4", true);
+            mTurnInfiniteDic.Add("3-5", true);
 
-            mTurnInfiniteDic.Add("4-1", false);
-            mTurnInfiniteDic.Add("4-2", false);
-            mTurnInfiniteDic.Add("4-3", false);
-            mTurnInfiniteDic.Add("4-4", false);
-            mTurnInfiniteDic.Add("4-5", false);
-
+            mTurnInfiniteDic.Add("4-1", true);
+            mTurnInfiniteDic.Add("4-2", true);
+            mTurnInfiniteDic.Add("4-3", true);
+            mTurnInfiniteDic.Add("4-4", true);
+            mTurnInfiniteDic.Add("4-5", true);
         }
 
         /// <summary>
