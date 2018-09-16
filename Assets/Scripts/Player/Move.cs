@@ -167,7 +167,7 @@ namespace MiniGame
             }
             else
             {
-                SetPlayerAngle(msg.mTargetPos - gameObject.transform.position);
+                SetPlayerAngle(msg.mTargetPos - gameObject.transform.position, true);
                 gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
                 gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
                 gameObject.transform.DOMove(msg.mTargetPos, 4.0f).OnComplete(() =>
@@ -224,7 +224,7 @@ namespace MiniGame
                         AudioManager.Instance.PlayOneShotIndex(6);
                         canPlayMoveSound = false;
                     }       
-                    SetPlayerAngle(mMoveDirection);
+                    SetPlayerAngle(mMoveDirection, false);
                     mMoveDirection.Normalize();
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
                     mDragTime = 0;
@@ -258,7 +258,7 @@ namespace MiniGame
                         canPlayMoveSound = false;
                     }
                     mRg2D.Sleep();
-                    SetPlayerAngle(mMoveDirection);
+                    SetPlayerAngle(mMoveDirection,false);
                     mMoveDirection.Normalize();
                     //mRg2d.AddForce(moveDirection * mMoveSpeed);
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
@@ -272,14 +272,24 @@ namespace MiniGame
             }
         }       
 
-        private void SetPlayerAngle(Vector3 targetPosition)
+        private void SetPlayerAngle(Vector3 targetPosition, bool isMoveToNext)
         {
             float angle = Vector2.Angle(targetPosition, Vector3.up);
             Debug.Log("角度等于多少：" + angle);
-            if (mTargetPosition.x > mStartPosition.x)
+            if (!isMoveToNext)
             {
-                angle = -angle;
+                if (mTargetPosition.x > mStartPosition.x)
+                {
+                    angle = -angle;
+                }
             }
+            else
+            {
+                if (targetPosition.x > gameObject.transform.position.x)
+                {
+                    angle = -angle;
+                }
+            }     
             this.transform.eulerAngles = new Vector3(0, 0, angle);
             //Quaternion targetAngles = Quaternion.Euler(0, 0, angle);
             //gameObject.transform.rotation = targetAngles;
