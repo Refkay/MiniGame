@@ -203,6 +203,7 @@ namespace MiniGame
 
         private void On_TouchStart(Gesture gesture)
         {
+            isMoveable = true;
             mStartPosition = gesture.position;
             Debug.Log("坐标是多少 ： " + gesture.position.x + "  Y: " + gesture.position.y);
         }
@@ -227,14 +228,14 @@ namespace MiniGame
                     mMoveDirection.Normalize();
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
                     mDragTime = 0;
-                    mOffsetDistance = 0;
-                    //isMoveable = false;
+                    mOffsetDistance = 0;                
                     canAccelerate = true;
                     if (canCountDownTurn)
                     {
                         mTurnCount--;
-                    }       
-                }            
+                    }
+                    isMoveable = false;  
+                }
             }
         }
 
@@ -261,12 +262,12 @@ namespace MiniGame
                     mMoveDirection.Normalize();
                     //mRg2d.AddForce(moveDirection * mMoveSpeed);
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                    //isMoveable = true;
                     canAccelerate = true;
                     if (canCountDownTurn)
                     {
                         mTurnCount--;
                     }
+                    isMoveable = false;
                 }
             }
         }       
