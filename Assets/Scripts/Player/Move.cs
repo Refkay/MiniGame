@@ -275,11 +275,14 @@ namespace MiniGame
         private void SetPlayerAngle(Vector3 targetPosition)
         {
             float angle = Vector2.Angle(targetPosition, Vector3.up);
-            if (targetPosition.x > gameObject.transform.position.x)
+            Debug.Log("角度等于多少：" + angle);
+            if (mTargetPosition.x > mStartPosition.x)
             {
                 angle = -angle;
             }
             this.transform.eulerAngles = new Vector3(0, 0, angle);
+            //Quaternion targetAngles = Quaternion.Euler(0, 0, angle);
+            //gameObject.transform.rotation = targetAngles;
         }
 
         /// <summary>
