@@ -9,8 +9,8 @@ public class BlackHoleReaction : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Player")
         {
-            Vector3 gravity = (transform.position - collision.gameObject.transform.position).normalized;
-            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(gravity * gravityValue);
+            //Vector3 gravity = (transform.position - collision.gameObject.transform.position).normalized;
+            //collision.gameObject.GetComponent<Rigidbody2D>().AddForce(gravity * gravityValue);
         }
     }
 }

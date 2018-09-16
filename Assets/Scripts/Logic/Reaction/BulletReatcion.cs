@@ -11,6 +11,7 @@ namespace MiniGame
     public class BulletReatcion : MonoBehaviour
     {
         public GameObject UFO;
+        public ParticleSystem mParticleSystemEffect;
         private Vector3 mInitialPosition;
         private Color initinalStoneColor;
         private bool canReact = true;
@@ -38,6 +39,7 @@ namespace MiniGame
                 //    //这里要播放炸掉石头的特效
                 //});
                 canReact = false;
+                mParticleSystemEffect.Play();
                 gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
                 if (isAniComplete)
                 {

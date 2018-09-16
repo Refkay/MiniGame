@@ -32,8 +32,8 @@ namespace MiniGame
             mStatus = ManagerStatus.Started;
             //TODO ：这里的数据需要从存储里面读取，因为还没做，所以先放这里
             MissionData.LoadMissionData();
-            LoadMissionProgress();
-            // UpdateMissionLevel(1, 1);
+            //LoadMissionProgress();
+            UpdateMissionLevel(1, 1);
             mMaxLevel = MissionData.GetMaxLevel();
             mMaxSubLevel = MissionData.GetMaxSubLevel(mCurLevel);
         }

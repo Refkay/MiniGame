@@ -30,7 +30,7 @@ namespace MiniGame
             selectLevelView.SetMessages(GetLevelsList());
         }
 
-        private int[] levelData = new int[] { 3, 5, 5, 5 };
+        private int[] levelData = new int[] { 4, 5, 7 };
 
         private List<SelectItemMessage> GetLevelsList()
         {

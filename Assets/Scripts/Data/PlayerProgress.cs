@@ -57,7 +57,7 @@ namespace MiniGame
             PlayerPrefs.SetInt(HIGHEST_MAIN_LEVEL_KEY, _highestMainLevel);
             PlayerPrefs.SetInt(HIGHEST_SUB_LEVEL_KEY, _highestSubLevel);
             PlayerPrefs.SetInt(RECENT_MAIN_LEVEL_KEY, _recentMainLevel);
-            PlayerPrefs.SetInt(RECENT_SUB_LEVEL_KEY, _recentSubLevel);
+            PlayerPrefs.SetInt(RECENT_SUB_LEVEL_KEY, _recentSubLevel);     
         }
 
         // 读取玩家信息

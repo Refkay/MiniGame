@@ -26,6 +26,12 @@ namespace MiniGame
 
         public Button btn;
 
+        public Image img1;
+
+        public Image img2;
+
+        public Image img3;
+
         private SelectItemMessage data;
 
         private void Start()
@@ -46,11 +52,32 @@ namespace MiniGame
         private void SetData(SelectItemMessage data)
         {
             levelName.text = data.levelName;
+            switch (data.level)
+            {
+                case 1:
+                    img1.gameObject.SetActive(true);
+                    img2.gameObject.SetActive(false);
+                    img3.gameObject.SetActive(false);
+                    break;
+                case 2:
+                    img1.gameObject.SetActive(false);
+                    img2.gameObject.SetActive(true);
+                    img3.gameObject.SetActive(false);
+                    break;
+                case 3:
+                    img1.gameObject.SetActive(false);
+                    img2.gameObject.SetActive(false);
+                    img3.gameObject.SetActive(true);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void InitButtonEvent()
         {
             btn.onClick.AddListener(delegate () {
+                Time.timeScale = 1.0f;
                 MissionManager.Instance.UpdateMissionLevel(data.level, data.subLevel);
                 SceneManager.LoadSceneAsync("Level" + data.level + "-" + "1");               
             });
