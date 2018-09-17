@@ -89,6 +89,7 @@ namespace MiniGame
         private bool canPlayMoveSound = true;
 
         private bool canDoSuccess = true;
+        
 
         void Awake()
         {
@@ -213,13 +214,20 @@ namespace MiniGame
         private void On_TouchStart(Gesture gesture)
         {
             isMoveable = true;
-            mStartPosition = gesture.position;
+            if (mTurnCount > 0)
+            {
+                mStartPosition = gesture.position;
+            }
+       
             Debug.Log("坐标是多少 ： " + gesture.position.x + "  Y: " + gesture.position.y);
         }
 
         private void On_TouchDown(Gesture gesture)
         {
-            mTargetPosition = gesture.position;
+            if (mTurnCount > 0)
+            {
+                mTargetPosition = gesture.position;
+            }        
             mMoveDirection = mTargetPosition - mStartPosition;
             mDragTime += Time.deltaTime;
             mOffsetDistance = mMoveDirection.magnitude;
@@ -265,8 +273,7 @@ namespace MiniGame
                     {
                         AudioManager.Instance.PlayOneShotIndex(6);
                         canPlayMoveSound = false;
-                    }
-                    mRg2D.Sleep();
+                    }         
                     SetPlayerAngle(mMoveDirection, false);
                     mMoveDirection.Normalize();
                     //mRg2d.AddForce(moveDirection * mMoveSpeed);
@@ -387,12 +394,7 @@ namespace MiniGame
                 case "Damage":
                     OnPlayerDead(false);
                     break;
-                //case "Accelerate":
-                //    //进入加速区域
-                //    mMoveDirection.Normalize();
-                //    mRg2D.velocity = mMoveDirection * mAccSpeed;
-                //    mMoveSpeed = mAccSpeed;
-                //    break;
+               
                 default:
                     break;
             }
@@ -423,6 +425,17 @@ namespace MiniGame
                         StartCoroutine(GoToNext());
                     }
                     break;
+                case "Accelerate":
+                    //进入加速区域
+                    if (canAccelerate)
+                    {
+                        mMoveDirection.Normalize();
+                        SetPlayerAngle(mMoveDirection, false);
+                        mRg2D.velocity = mMoveDirection * mAccSpeed;
+                        mMoveSpeed = mAccSpeed;
+                        canAccelerate = false;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -439,14 +452,14 @@ namespace MiniGame
             {
                 case "Accelerate":
                     //进入加速区域
-                    if (canAccelerate && isMoveable)
-                    {
-                        mMoveDirection.Normalize();
-                        SetPlayerAngle(mMoveDirection, false);
-                        mRg2D.velocity = mMoveDirection * mAccSpeed;
-                        mMoveSpeed = mAccSpeed;
-                        canAccelerate = false;
-                    }
+                    //if (canAccelerate && isMoveable)
+                    //{
+                    //    mMoveDirection.Normalize();
+                    //    SetPlayerAngle(mMoveDirection, false);
+                    //    mRg2D.velocity = mMoveDirection * mAccSpeed;
+                    //    mMoveSpeed = mAccSpeed;
+                    //    canAccelerate = false;
+                    //}
                     break;
                 default:
                     break;
@@ -463,15 +476,15 @@ namespace MiniGame
             switch (tag)
             {
                 case "Accelerate":
-                    if (isMoveable)
-                    {
+                    //if (isMoveable)
+                    //{
                         //从加速区域出来，速度要恢复成原来的速度                   
                         mMoveDirection.Normalize();
                         SetPlayerAngle(mMoveDirection, false);
                         mRg2D.velocity = mMoveDirection * mInitialSpeed;
                         mMoveSpeed = mInitialSpeed;
                         canAccelerate = true;
-                    }
+                    //}
                     break;
                 case "CameraArea":
                     if (!isSuccess)
