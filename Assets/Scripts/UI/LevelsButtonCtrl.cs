@@ -12,11 +12,10 @@ public class LevelsButtonCtrl : MonoBehaviour {
         btn.onClick.AddListener(OnClick);
 	}
 	
-    // TODO: 检查是否玩过
+    // 检查是否玩过
     bool CheckHasPlayed()
     {
-        Debug.LogError("LevelsButtonCtrl::CheckHasPlayed: no implementation!!!");
-        return true;
+        return MiniGame.PlayerProgress.Instance.HasPlayed;
     }
 
     private void OnClick()

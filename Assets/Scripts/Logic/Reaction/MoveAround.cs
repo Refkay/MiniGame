@@ -37,7 +37,7 @@ namespace MiniGame
         // 起点终点附近加速度
         private float _acceleration;
 
-        private void Awake()
+        private void Start()
         {
             _remainTimes = maxinumTimes;
             _startPosition = startPoint.transform.position;

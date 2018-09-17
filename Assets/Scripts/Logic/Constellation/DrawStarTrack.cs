@@ -18,6 +18,7 @@ namespace MiniGame
         public Camera mainCamera;
         private Vector3 starPosition;
         private Vector3 targetPosition;
+        private Vector3 mIniCameraBgScale;
         //绘制线的时间
         private float lineTime = 2.6f;
         //绘制线的速度
@@ -52,6 +53,7 @@ namespace MiniGame
         void Start()
         {
             _listenFlag = true;
+            mIniCameraBgScale = cameraBg.transform.localScale;
             SceneReset();
             Shot1();
         }
@@ -123,9 +125,11 @@ namespace MiniGame
                 yield return new WaitForSeconds(lineTime - 0.1f);
             }        
             bgImage.gameObject.GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 1), 5.5f);
-            mainCamera.transform.DOMove(new Vector3(0,0, -10), 4.0f);
+            mainCamera.transform.DOMove(new Vector3(0, 0, -10), 4.0f);
             mainCamera.DOOrthoSize(5.0f, 4.0f);
-            cameraBg.gameObject.transform.DOScale(new Vector3(1, 1, 0), 4.0f);
+
+            Vector3 targetScale = new Vector3(mIniCameraBgScale.x * 5, mIniCameraBgScale.y * 5, 1);
+            cameraBg.gameObject.transform.DOScale(targetScale, 4.0f);
             yield return new WaitForSeconds(4.0f);
 
             mainCamera.DOOrthoSize(1.0f, 4.0f);       

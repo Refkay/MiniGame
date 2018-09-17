@@ -32,10 +32,28 @@ namespace MiniGame
             mStatus = ManagerStatus.Started;
             //TODO ：这里的数据需要从存储里面读取，因为还没做，所以先放这里
             MissionData.LoadMissionData();
+            //LoadMissionProgress();
             UpdateMissionLevel(1, 1);
             mMaxLevel = MissionData.GetMaxLevel();
             mMaxSubLevel = MissionData.GetMaxSubLevel(mCurLevel);
-        }    
+        }
+
+        private void LoadMissionProgress()
+        {
+            var dataValid =
+                PlayerProgress.Instance.HasPlayed &&
+                PlayerProgress.Instance.RecentMainLevel > 0 &&
+                PlayerProgress.Instance.RecentSubLevel > 0;
+            if (dataValid)
+            {
+                UpdateMissionLevel(PlayerProgress.Instance.RecentMainLevel, PlayerProgress.Instance.RecentSubLevel);
+            }
+            else
+            {
+                UpdateMissionLevel(1, 1);
+            }
+
+        }
 
         public void UpdateMissionLevel(int currentLevel, int currentSubLevel)
         {
@@ -57,12 +75,18 @@ namespace MiniGame
                 //将下一大关的小关卡重置
                 mMaxSubLevel = MissionData.GetMaxSubLevel(mCurLevel);     
                 SceneManager.LoadSceneAsync("Level" + mCurLevel + "-" + mCurSubLevel);                                
+
+                PlayerProgress.Instance.SubmitNewProgress(mCurLevel, mCurSubLevel);
             }
             else
             {
                 Debug.Log("Last level");
+
+                PlayerProgress.Instance.SubmitNewProgress(-1, -1);
+                
                 //发送消息，游戏已经到最后一关了,到这里整个游戏通关了
                 MessageBus.Send(new OnGameCompleteMsg());
+
             }
         }
 
@@ -79,6 +103,8 @@ namespace MiniGame
                 //移动镜头的做法              
                 MessageBus.Send(new OnCameraMoveMsg(MissionData.GetCameraPosition(mCurLevel, mCurSubLevel), false));
                 MessageBus.Send(new OnPlayerMoveMsg(MissionData.GetPlayerPosition(mCurLevel, mCurSubLevel), false));
+
+                PlayerProgress.Instance.SubmitNewProgress(mCurLevel, mCurSubLevel);
             }
             else
             {

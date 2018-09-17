@@ -10,6 +10,7 @@ namespace MiniGame
     public class TurnPointReaction : MonoBehaviour
     {
         GameObject desObj;
+        public ParticleSystem mParticleSystemEffect;
         private void Awake()
         {
             MessageBus.Register<OnSubLevelFailedMsg>(OnSubLevelFailed);
@@ -23,6 +24,9 @@ namespace MiniGame
         {
             if (collision.gameObject.tag == "Player")
             {
+                mParticleSystemEffect.Play();
+                //播放音乐
+                AudioManager.Instance.PlayOneShotIndex(5);
                 MessageBus.Send(new OnAddTurnChanceMsg());
                 //展示水晶被吃掉的动画
                 //desObj = GameObject.Instantiate(Resources.Load("Prefabs/CrystalDismiss")) as GameObject;

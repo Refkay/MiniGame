@@ -75,7 +75,7 @@ namespace MiniGame
         private bool OnGameComplete(OnGameCompleteMsg msg)
         {
             //TODO : 整个游戏通关，这里先随便给个提示
-            
+            SceneManager.LoadSceneAsync("MainMenu");
             return false;
         }
 
@@ -84,7 +84,8 @@ namespace MiniGame
             //TODO : 大关卡完成，在这里可以进行相应的操作          
             yield return new WaitForSeconds(2);
             //这里先跳转到大关卡通关的界面，就是展示连线形成星座的界面，然后再进入到下一关
-            SceneManager.LoadSceneAsync("Constellation" + 1);
+            UIManager.Instance.HideAll();
+            SceneManager.LoadSceneAsync("Constellation" + MissionManager.Instance.mCurLevel);
             
             yield return null;
         }

@@ -9,6 +9,7 @@ namespace MiniGame
 {
     public class Move : MonoBehaviour
     {
+        public ParticleSystem mExplosionParticles;
 
         public Rigidbody2D mRg2D;
 
@@ -70,14 +71,24 @@ namespace MiniGame
         private bool isSuccess;
 
         //小球重生时间
-        private float mRebornTime = 0.7f;
+        private float mRebornTime = 1.1f;
 
         //能否播放小球死亡动画
         private bool canPlayDeadEffet = true;
 
+        //初始化速度
         private float mInitialSpeed;
 
-        private bool canAccelerate = false;
+        //能否加速
+        private bool canAccelerate = true;
+
+        private bool canTurnInfinite;
+
+        private bool canCountDownTurn = true;
+
+        private bool canPlayMoveSound = true;
+
+        private bool canDoSuccess = true;
 
         void Awake()
         {
@@ -90,18 +101,27 @@ namespace MiniGame
                 mDragTimeThreshold = config.dragTimeThreshold;
                 mOffsetThreshold = config.offsetThreshold;
                 mAccSpeed = config.accSpeed;
-            }        
+            }
         }
 
         void Start()
-        {          
+        {
             mRg2D = GetComponent<Rigidbody2D>();
             mInitialPosition = transform.position;
             mInitialRotation = transform.rotation;
             mInitialSpeed = mMoveSpeed;
+            canTurnInfinite = MissionData.GetLevelTurnInfinite(MissionManager.Instance.mCurLevel, MissionManager.Instance.mCurSubLevel);
             isSuccess = false;
+            StartCoroutine(ShowGamePanel());
         }
 
+
+        IEnumerator ShowGamePanel()
+        {
+            yield return new WaitForSeconds(3.0f);
+            UIManager.Instance.GoToGame();
+        }
+    
         private void InitMessage(bool register)
         {
             if (register)
@@ -148,23 +168,29 @@ namespace MiniGame
         private bool OnPlayerMove(OnPlayerMoveMsg msg)
         {
             isSuccess = false;
+            canTurnInfinite = MissionData.GetLevelTurnInfinite(MissionManager.Instance.mCurLevel, MissionManager.Instance.mCurSubLevel);
             mInitialPosition = msg.mTargetPos;
             if (msg.isMoveDirectly) {
                 gameObject.transform.position = msg.mTargetPos;
             }
             else
             {
-                SetPlayerAngle(msg.mTargetPos);
+                SetPlayerAngle(msg.mTargetPos - gameObject.transform.position, true);
+                gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+                gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
                 gameObject.transform.DOMove(msg.mTargetPos, 4.0f).OnComplete(() =>
-                {
+                {                 
                     gameObject.GetComponent<BoxCollider2D>().enabled = true;
                     isMoveable = true;
-                    this.transform.eulerAngles = new Vector3(0, 0, 0);
+                    mTurnCount = 2;
+                    canCountDownTurn = true;
+                    canPlayMoveSound = true;
+                    canDoSuccess = true;
+                    this.transform.eulerAngles = new Vector3(0, 0, 0);                    
                 });
             }
-            //小球的初始化位置变为下一个位置
-         
-         
+            //小球的初始化位置变为下一个位置         
+
             return false;
         }
 
@@ -185,7 +211,9 @@ namespace MiniGame
 
         private void On_TouchStart(Gesture gesture)
         {
+            isMoveable = true;
             mStartPosition = gesture.position;
+            Debug.Log("坐标是多少 ： " + gesture.position.x + "  Y: " + gesture.position.y);
         }
 
         private void On_TouchDown(Gesture gesture)
@@ -197,14 +225,25 @@ namespace MiniGame
             //滑动的时候超过时间的阈值或者超过距离的阈值，球也要转向      
             if (((mDragTime > mDragTimeThreshold) || (mOffsetDistance > mOffsetThreshold)) && isMoveable )
             {
-                SetPlayerAngle(mMoveDirection);
-                mMoveDirection.Normalize();
-                mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                mDragTime = 0;
-                mOffsetDistance = 0;
-                //isMoveable = false;
-                canAccelerate = true;
-                mTurnCount--;
+                if (canTurnInfinite || mTurnCount > 0)
+                {
+                    if (canPlayMoveSound)
+                    {
+                        AudioManager.Instance.PlayOneShotIndex(6);
+                        canPlayMoveSound = false;
+                    }       
+                    SetPlayerAngle(mMoveDirection, false);
+                    mMoveDirection.Normalize();
+                    mRg2D.velocity = mMoveDirection * mMoveSpeed;
+                    mDragTime = 0;
+                    mOffsetDistance = 0;                
+                    //canAccelerate = true;
+                    if (canCountDownTurn)
+                    {
+                        mTurnCount--;
+                    }
+                    isMoveable = false;  
+                }
             }
         }
 
@@ -219,27 +258,49 @@ namespace MiniGame
             //必须滑动到一定的距离才能转向
             if (mMoveDirection.magnitude >= mMinoffset && isMoveable)
             {
-                mRg2D.Sleep();
-                SetPlayerAngle(mMoveDirection);
-                mMoveDirection.Normalize();
-                //mRg2d.AddForce(moveDirection * mMoveSpeed);
-                mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                //isMoveable = true;
-                canAccelerate = true;
-                mTurnCount--;
+                if (canTurnInfinite || mTurnCount > 0)
+                {
+                    if (canPlayMoveSound)
+                    {
+                        AudioManager.Instance.PlayOneShotIndex(6);
+                        canPlayMoveSound = false;
+                    }
+                    mRg2D.Sleep();
+                    SetPlayerAngle(mMoveDirection,false);
+                    mMoveDirection.Normalize();
+                    //mRg2d.AddForce(moveDirection * mMoveSpeed);
+                    mRg2D.velocity = mMoveDirection * mMoveSpeed;
+                    //canAccelerate = true;
+                    if (canCountDownTurn)
+                    {
+                        mTurnCount--;
+                    }
+                    isMoveable = false;
+                }
             }
         }       
 
-        private void SetPlayerAngle(Vector3 targetPosition)
+        private void SetPlayerAngle(Vector3 targetPosition, bool isMoveToNext)
         {
-            float angle;
-            Vector2 targetDir = targetPosition - gameObject.transform.position;
-            angle = Vector2.Angle(targetDir, Vector3.up);
-            if (targetPosition.x > gameObject.transform.position.x)
+            float angle = Vector2.Angle(targetPosition, Vector3.up);
+            Debug.Log("角度等于多少：" + angle);
+            if (!isMoveToNext)
             {
-                angle = -angle;
+                if (mTargetPosition.x > mStartPosition.x)
+                {
+                    angle = -angle;
+                }
             }
+            else
+            {
+                if (targetPosition.x > gameObject.transform.position.x)
+                {
+                    angle = -angle;
+                }
+            }     
             this.transform.eulerAngles = new Vector3(0, 0, angle);
+            //Quaternion targetAngles = Quaternion.Euler(0, 0, angle);
+            //gameObject.transform.rotation = targetAngles;
         }
 
         /// <summary>
@@ -247,29 +308,31 @@ namespace MiniGame
         /// </summary>
         private void OnPlayerDead(bool isOutOfCamera)
         {
-            //重置位置          
+            //重置位置                      
             mRg2D.Sleep();
             isMoveable = false;
-            //播放死亡动画
-            GameObject playDeadObj = new GameObject();
+            canCountDownTurn = false;
+            canPlayMoveSound = true;           
             //光球出摄像机外不播放死亡动画
             if (!isOutOfCamera && canPlayDeadEffet)
             {
-                mPlayerDead = GameObject.Instantiate(Resources.Load("Prefabs/PlayerDead")) as GameObject;
-                mPlayerDead.transform.position = gameObject.transform.position;
+                //mPlayerDead = GameObject.Instantiate(Resources.Load("Prefabs/PlayerDead")) as GameObject;
+                //mPlayerDead.transform.position = gameObject.transform.position;
+                //播放死亡动画         
+                mExplosionParticles.Play();
                 canPlayDeadEffet = false;
+                //播放死亡音效  
+                AudioManager.Instance.PlayOneShotIndex(7);
             }    
-            //重置转向次数
-            mTurnCount = 2;
+            else
+            {
+                AudioManager.Instance.PlayOneShotIndex(10);
+            }
             //这里是隐藏光球，因为Invoke或者协程需要gameObject的active为true的时候才能正常执行，所以这里想到用改透明度来隐藏光球
             gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
-            canAccelerate = false;        
-            Invoke("ResetPlayer", mRebornTime);
-            if (playDeadObj != null)
-            {
-                Destroy(playDeadObj);
-            }
+            canAccelerate = true;         
+            Invoke("ResetPlayer", mRebornTime);         
             Debug.Log("执行到这里了");
   
         }
@@ -279,29 +342,35 @@ namespace MiniGame
         {
             gameObject.transform.position = mInitialPosition;
             gameObject.transform.rotation = mInitialRotation;
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+            gameObject.GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 1), 1.0f) ;
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
             this.transform.eulerAngles = new Vector3(0, 0, 0);
-            isMoveable = true;
+            Invoke("SetMoveable", 1.0f);       
             canPlayDeadEffet = true;
-            canAccelerate = false;
+            canAccelerate = true;
             mMoveSpeed = mInitialSpeed;
             //销毁小球死亡的GameObject
             if (mPlayerDead != null)
             {
                 Destroy(mPlayerDead);
             }
+            //重置转向次数
+            mTurnCount = 2;
+            canCountDownTurn = true;
             MessageBus.Send(new OnSubLevelFailedMsg());
+        }
+
+        private void SetMoveable()
+        {
+            isMoveable = true;
         }
 
         private IEnumerator GoToNext()
         {
             yield return new WaitForSeconds(1.2f);
-            gameObject.GetComponent<BoxCollider2D>().enabled = false;
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
-            canAccelerate = false;
-            mMoveSpeed = mInitialSpeed;
-            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;          
+            canAccelerate = true;
+            mMoveSpeed = mInitialSpeed;           
             //发送消息到GameSystem，小关卡完成，通知进入下一关卡      
             MessageBus.Send(new OnSubLevelCompleteMsg());
         }
@@ -314,7 +383,7 @@ namespace MiniGame
             string tag = collision.gameObject.tag;
             switch (tag)
             {
-                case "Damage":               
+                case "Damage":                 
                     OnPlayerDead(false);       
                     break;
                 //case "Accelerate":
@@ -338,14 +407,20 @@ namespace MiniGame
             switch (tag)
             {
                 case "Destination":
-                    //通过当前小关卡
-                    Debug.Log("On SubLevel Complete");
-                    isSuccess = true;
-                    isMoveable = false;
-                    GetComponent<Rigidbody2D>().Sleep();
-                    gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
-                    gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
-                    StartCoroutine(GoToNext());
+                    if (canDoSuccess)
+                    {
+                        canDoSuccess = false;
+                        //通过当前小关卡
+                        Debug.Log("On SubLevel Complete");
+                        AudioManager.Instance.PlayOneShotIndex(8);
+                        canCountDownTurn = false;
+                        isSuccess = true;
+                        isMoveable = false;
+                        GetComponent<Rigidbody2D>().Sleep();
+                        gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+                        gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
+                        StartCoroutine(GoToNext());
+                    }              
                     break;
                 default:
                     break;
@@ -361,12 +436,15 @@ namespace MiniGame
             string tag = collision.gameObject.tag;
             switch (tag)
             {
-                case "Accelerate":
+                case "Accelerate":                  
                     //进入加速区域
-                    if (canAccelerate)
-                    {
+                    if (canAccelerate && isMoveable)
+                    {                                                            
                         mMoveDirection.Normalize();
+                        SetPlayerAngle(mMoveDirection, false);
                         mRg2D.velocity = mMoveDirection * mAccSpeed;
+                        mMoveSpeed = mAccSpeed;
+                        canAccelerate = false;
                     }          
                     break;
                 default:
@@ -384,12 +462,15 @@ namespace MiniGame
             switch (tag)
             {
                 case "Accelerate":
-                    //从加速区域出来，速度要恢复成原来的速度
-                    if (canAccelerate)
+                    if (isMoveable)
                     {
+                        //从加速区域出来，速度要恢复成原来的速度                   
                         mMoveDirection.Normalize();
-                        mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                    }                 
+                        SetPlayerAngle(mMoveDirection, false);
+                        mRg2D.velocity = mMoveDirection * mInitialSpeed;
+                        mMoveSpeed = mInitialSpeed;
+                        canAccelerate = true;                      
+                    }
                     break;
                 case "CameraArea":
                     if (!isSuccess)
@@ -416,6 +497,18 @@ namespace MiniGame
         private void OnBecameInvisible()
         {               
             
+        }
+
+        private GameObject GetTargetGameObjectByName(GameObject obj,string name)
+        {
+            foreach (Transform t in obj.GetComponentsInChildren<Transform>())
+            {
+                if (t.name == name)
+                {
+                    return t.gameObject;
+                }
+            }
+            return null;
         }
     }
 

@@ -1,37 +1,52 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
-
-namespace MiniGameComm
+using MiniGameComm;
+namespace MiniGame
 {
-    /// <summary>
-    /// 音频管理类
-    /// </summary>
-    public class AudioManager : MonoSingleton<AudioManager>, IGameManager
+    public class AudioManager : MonoSingleton<AudioManager>
     {
-
-        public ManagerStatus mStatus
-        {
-            get;
-            private set;
-        }
-
-        public void Startup()
-        {
-            mStatus = ManagerStatus.Started;
-        }
+        public List<AudioClip> audioList;
+        private AudioSource backMusicSource = null;
+        private AudioSource soundSource = null;
+        //public string musicName = "";
 
         // Use this for initialization
-        void Start()
+        private void Start()
         {
 
         }
 
-        // Update is called once per frame
-        void Update()
-        {
 
+        /// <summary>
+        /// The init.
+        /// </summary>
+        protected override void Init()
+        {
+            backMusicSource = gameObject.AddComponent<AudioSource>();
+            backMusicSource.loop = true;
+
+            soundSource = gameObject.AddComponent<AudioSource>();
+            soundSource.volume = 0.48f;
+
+            backMusicSource.clip = this.audioList[0];
+            backMusicSource.Play();
+        }
+        private void PlayMusic(string musicPath)
+        {
+            AudioClip clip = Resources.Load(musicPath) as AudioClip;
+            backMusicSource.clip = clip;
+            backMusicSource.Play();
+        }
+
+        private void PlaySound(string soundPath)
+        {
+            AudioClip clip = Resources.Load(soundPath) as AudioClip;
+            soundSource.PlayOneShot(clip);
+        }
+
+        public void PlayOneShotIndex(int i)
+        {
+            soundSource.PlayOneShot(this.audioList[i]);
         }
     }
 }
-

@@ -34,6 +34,10 @@ namespace MiniGame
         //关卡失败，所有的石头都显示出来
         private bool OnSubLevelFailed(OnSubLevelFailedMsg msg)
         {
+            if (mStoneList.Count == 0)
+            {
+                return false;
+            }
             ClearStoneList();
             SetStoneList(true);
             for(int i = 0; i < mStoneList.Count; i++)
@@ -60,6 +64,10 @@ namespace MiniGame
             //找到对应的小关的
             mStoneContainer = GetTargetGameObjectByName("StoneContainer"
                 + MissionManager.Instance.mCurLevel + "-" + MissionManager.Instance.mCurSubLevel).gameObject;
+            if (mStoneContainer == null)
+            {
+                return;
+            }
 
             foreach (Transform child in mStoneContainer.transform)
             {

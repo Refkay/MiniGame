@@ -16,6 +16,9 @@ namespace MiniGame
         //保存每一关相机的起始位置的Dictionary， Key是 string currentLevel-currentSubLevel （1-1,1-2等）
         public static Dictionary<string, Vector3> mCameraPositonDic = new Dictionary<string, Vector3>();
 
+        //保存每一关是否可以无限次转向的Dictionary
+        public static Dictionary<string, bool> mTurnInfiniteDic = new Dictionary<string, bool>();
+
         /// <summary>
         /// 加载每个小关卡的位置，其实就是保存位置信息到Dictionary里面
         /// TODO ： 这里为了测试先这么写，后续可以再改进数据读取方式
@@ -23,58 +26,73 @@ namespace MiniGame
         public static void LoadMissionData()
         {           
             //加载关卡信息
-            mMissionDataDic.Add(1, 3);
+            mMissionDataDic.Add(1, 4);
             mMissionDataDic.Add(2, 5);
-            mMissionDataDic.Add(3, 5);
-            mMissionDataDic.Add(4, 5);
+            mMissionDataDic.Add(3, 7);
+            //mMissionDataDic.Add(4, 5);
 
             //加载Player每一小关的起始位置信息
             mPlayerPositionDic.Add("1-1", new Vector3(0f, -9f, 0f));
-            mPlayerPositionDic.Add("1-2", new Vector3(31.4f, -18.8f, 0));
-            mPlayerPositionDic.Add("1-3", new Vector3(56.8f, -36.9f, 0));
+            mPlayerPositionDic.Add("1-2", new Vector3(23.7f, -17.6f, 0));
+            mPlayerPositionDic.Add("1-3", new Vector3(-6.3f, -43.7f, 0));
+            mPlayerPositionDic.Add("1-4", new Vector3(27.9f, -56.1f, 0));
 
             mPlayerPositionDic.Add("2-1", new Vector3(-43.9f, 17.6f, 0));
-            mPlayerPositionDic.Add("2-2", new Vector3(-22.4f, 45.5f, 0));
-            mPlayerPositionDic.Add("2-3", new Vector3(6.1f, 34f, 0));
-            mPlayerPositionDic.Add("2-4", new Vector3(-22.2f, -3.13f, 0));
-            mPlayerPositionDic.Add("2-5", new Vector3(18.6f, -10.3f, 0));
+            mPlayerPositionDic.Add("2-2", new Vector3(-22.7f, -2.7f, 0));
+            mPlayerPositionDic.Add("2-3", new Vector3(0.9f, -17.4f, 0));
+            mPlayerPositionDic.Add("2-4", new Vector3(-7.4f, -48.8f, 0));
+            mPlayerPositionDic.Add("2-5", new Vector3(38.4f, -14.1f, 0));
 
             mPlayerPositionDic.Add("3-1", new Vector3(-16f, -41.5f, 0f));
-            mPlayerPositionDic.Add("3-2", new Vector3(13.4f, -41.5f, 0f));
-            mPlayerPositionDic.Add("3-3", new Vector3(43.6f, -41.5f, 0f));
-            mPlayerPositionDic.Add("3-4", new Vector3(74.1f, -41.5f, 0f));
-            mPlayerPositionDic.Add("3-5", new Vector3(104.1f, -41.5f, 0f));
-
-            mPlayerPositionDic.Add("4-1", new Vector3(-16f, -41.5f, 0f));
-            mPlayerPositionDic.Add("4-2", new Vector3(13.4f, -41.5f, 0f));
-            mPlayerPositionDic.Add("4-3", new Vector3(43.6f, -41.5f, 0f));
-            mPlayerPositionDic.Add("4-4", new Vector3(74.1f, -41.5f, 0f));
-            mPlayerPositionDic.Add("4-5", new Vector3(104.1f, -41.5f, 0f));
+            mPlayerPositionDic.Add("3-2", new Vector3(15.8f, -61.2f, 0f));
+            mPlayerPositionDic.Add("3-3", new Vector3(52f, -23.2f, 0f));
+            mPlayerPositionDic.Add("3-4", new Vector3(111.3f, -79.3f, 0f));
+            mPlayerPositionDic.Add("3-5", new Vector3(69.3f, -69.25f, 0f));
+            mPlayerPositionDic.Add("3-6", new Vector3(43.3f, -83.18f, 0f));
+            mPlayerPositionDic.Add("3-7", new Vector3(47.0f, -109f, 0f));
 
             //加载Camera每一小关的位置
-            mCameraPositonDic.Add("1-1", new Vector3(0f, 0f, -10));
-            mCameraPositonDic.Add("1-2", new Vector3(31.4f, -10.5f, -10));
-            mCameraPositonDic.Add("1-3", new Vector3(56.8f, -29f, -10));
+            mCameraPositonDic.Add("1-1", new Vector3(0f, 0f, -15));
+            mCameraPositonDic.Add("1-2", new Vector3(23.7f, -8.6f, -15));
+            mCameraPositonDic.Add("1-3", new Vector3(-6.3f, -34.7f, -15));
+            mCameraPositonDic.Add("1-4", new Vector3(27.9f, -47.1f, -15));
 
-            mCameraPositonDic.Add("2-1", new Vector3(-43.9f, 26.6f, -10));
-            mCameraPositonDic.Add("2-2", new Vector3(-22.4f, 54.5f, -10));
-            mCameraPositonDic.Add("2-3", new Vector3(6.1f, 43f, -10));
-            mCameraPositonDic.Add("2-4", new Vector3(-22.2f, 6.13f, -10));
-            mCameraPositonDic.Add("2-5", new Vector3(18.6f, -1.3f, -10));
+            mCameraPositonDic.Add("2-1", new Vector3(-43.9f, 26.6f, -15));
+            mCameraPositonDic.Add("2-2", new Vector3(-22.7f, 6.3f, -15));
+            mCameraPositonDic.Add("2-3", new Vector3(0.9f, -8.4f, -15));
+            mCameraPositonDic.Add("2-4", new Vector3(-7.4f, -39.8f, -15));
+            mCameraPositonDic.Add("2-5", new Vector3(38.4f, -5.1f, -15));
 
-            mCameraPositonDic.Add("3-1", new Vector3(-16f, -32.5f, -10f));
-            mCameraPositonDic.Add("3-2", new Vector3(13.4f, -32.5f, -10f));
-            mCameraPositonDic.Add("3-3", new Vector3(43.6f, -32.5f, -10f));
-            mCameraPositonDic.Add("3-4", new Vector3(74.1f, -32.5f, -10f));
-            mCameraPositonDic.Add("3-5", new Vector3(104.1f, -32.5f, -10f));
+            mCameraPositonDic.Add("3-1", new Vector3(-16f, -32.5f, -15f));
+            mCameraPositonDic.Add("3-2", new Vector3(15.8f, -52.2f, -15f));
+            mCameraPositonDic.Add("3-3", new Vector3(52f, -14.2f, -15f));
+            mCameraPositonDic.Add("3-4", new Vector3(111.3f, -70.3f, -15f));
+            mCameraPositonDic.Add("3-5", new Vector3(69.3f, -60.25f, -15f));
+            mCameraPositonDic.Add("3-6", new Vector3(43.3f, -74.18f, -15f));
+            mCameraPositonDic.Add("3-7", new Vector3(47.0f, -100f, -15f));
 
-            mCameraPositonDic.Add("4-1", new Vector3(-16f, -32.5f, -10f));
-            mCameraPositonDic.Add("4-2", new Vector3(13.4f, -32.5f, -10f));
-            mCameraPositonDic.Add("4-3", new Vector3(43.6f, -32.5f, -10f));
-            mCameraPositonDic.Add("4-4", new Vector3(74.1f, -32.5f, -10f));
-            mCameraPositonDic.Add("4-5", new Vector3(104.1f, -32.5f, -10f));
+            //加载每一关是否可以无限次转向的信息
+            mTurnInfiniteDic.Add("1-1", false);
+            mTurnInfiniteDic.Add("1-2", false);
+            mTurnInfiniteDic.Add("1-3", false);
+            mTurnInfiniteDic.Add("1-4", false);
+
+            mTurnInfiniteDic.Add("2-1", false);
+            mTurnInfiniteDic.Add("2-2", false);
+            mTurnInfiniteDic.Add("2-3", false);
+            mTurnInfiniteDic.Add("2-4", false);
+            mTurnInfiniteDic.Add("2-5", false);
+
+            mTurnInfiniteDic.Add("3-1", false);
+            mTurnInfiniteDic.Add("3-2", false);
+            mTurnInfiniteDic.Add("3-3", false);
+            mTurnInfiniteDic.Add("3-4", false);
+            mTurnInfiniteDic.Add("3-5", false);
+            mTurnInfiniteDic.Add("3-6", false);
+            mTurnInfiniteDic.Add("3-7", false);
+
         }
-       
+
         /// <summary>
         /// 取得大关卡总数
         /// </summary>
@@ -120,6 +138,20 @@ namespace MiniGame
             return position;
         }
 
+        //获取某个关卡能否无限转向
+        public static bool GetLevelTurnInfinite(int currentLevel, int currentSubLevel)
+        {
+            bool canTrunInfinite = false;
+            foreach (KeyValuePair<string, bool> kvp in mTurnInfiniteDic)
+            {
+                if (kvp.Key == currentLevel + "-" + currentSubLevel)
+                {
+                    canTrunInfinite = kvp.Value;
+                    break;
+                }
+            }
+            return canTrunInfinite;
+        }
     }
 }
 

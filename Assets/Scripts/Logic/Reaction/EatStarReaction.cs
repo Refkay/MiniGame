@@ -22,14 +22,18 @@ namespace MiniGame
         {
             if (collision.gameObject.tag == "Player")
             {
+                //播放音乐
+                AudioManager.Instance.PlayOneShotIndex(4);
                 MessageBus.Send(new OnAddStarMsg());
                 gameObject.SetActive(false);
+                gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
             }
         }
 
         private bool OnSubLevelFailed(OnSubLevelFailedMsg msg)
         {
             gameObject.SetActive(true);
+            gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
             return false;
         }
     }

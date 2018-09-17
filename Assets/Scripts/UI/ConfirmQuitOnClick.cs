@@ -7,6 +7,7 @@ public class ConfirmQuitOnClick : MonoBehaviour
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+        PlayerPrefs.DeleteAll();
 #else
         Application.Quit();
 #endif
