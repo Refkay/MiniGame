@@ -19,9 +19,21 @@ namespace MiniGame
         }
 
         //当前主关卡
-        public int mCurLevel { get; private set; }
+        public int mCurLevel
+        {
+            get
+            {
+                return PlayerProgress.Instance.RecentMainLevel;
+            }
+        }
         //当前子关卡
-        public int mCurSubLevel { get; private set; }
+        public int mCurSubLevel
+        {
+            get
+            {
+                return PlayerProgress.Instance.RecentSubLevel;
+            }
+        }
         //最高等级的主关卡
         public int mMaxLevel { get; private set; }
         //最高等级的子关卡
@@ -57,8 +69,7 @@ namespace MiniGame
 
         public void UpdateMissionLevel(int currentLevel, int currentSubLevel)
         {
-            this.mCurLevel = currentLevel;
-            this.mCurSubLevel = currentSubLevel;
+            PlayerProgress.Instance.SubmitNewProgress(currentLevel, currentSubLevel);
             mMaxSubLevel = MissionData.GetMaxSubLevel(mCurLevel);
         }
 
@@ -68,25 +79,22 @@ namespace MiniGame
         public void GoToNextLevel()
         {
             //首先要将小关卡重置为1
-            mCurSubLevel = 1;                    
+            // mCurSubLevel = 1;
+            var subLv = 1;
             if (mCurLevel < mMaxLevel)
             {
-                mCurLevel++;
+                UpdateMissionLevel(mCurLevel + 1, 1);
                 //将下一大关的小关卡重置
                 mMaxSubLevel = MissionData.GetMaxSubLevel(mCurLevel);     
                 SceneManager.LoadSceneAsync("Level" + mCurLevel + "-" + mCurSubLevel);                                
-
-                PlayerProgress.Instance.SubmitNewProgress(mCurLevel, mCurSubLevel);
             }
             else
             {
                 Debug.Log("Last level");
 
-                PlayerProgress.Instance.SubmitNewProgress(-1, -1);
-                
+                PlayerProgress.Instance.SubmitNewProgress(0, 0);
                 //发送消息，游戏已经到最后一关了,到这里整个游戏通关了
                 MessageBus.Send(new OnGameCompleteMsg());
-
             }
         }
 
@@ -97,14 +105,12 @@ namespace MiniGame
         {
             if (mCurSubLevel < mMaxSubLevel)
             {
-                mCurSubLevel++;
+                UpdateMissionLevel(mCurLevel, mCurSubLevel + 1);
                 //不移动镜头的做法
                 //SceneManager.LoadSceneAsync("Level" + mCurLevel + "-" + mCurSubLevel); 
                 //移动镜头的做法              
                 MessageBus.Send(new OnCameraMoveMsg(MissionData.GetCameraPosition(mCurLevel, mCurSubLevel), false));
                 MessageBus.Send(new OnPlayerMoveMsg(MissionData.GetPlayerPosition(mCurLevel, mCurSubLevel), false));
-
-                PlayerProgress.Instance.SubmitNewProgress(mCurLevel, mCurSubLevel);
             }
             else
             {
