@@ -80,7 +80,7 @@ namespace MiniGame
         private float mInitialSpeed;
 
         //能否加速
-        private bool canAccelerate = false;
+        private bool canAccelerate = true;
 
         private bool canTurnInfinite;
 
@@ -94,6 +94,14 @@ namespace MiniGame
         {
             gameObject.transform.position = MissionManager.Instance.GetPlayerStartPos();
             InitMessage(true);
+            Config config = Config.Load();
+            if (config != null)
+            {
+                mMoveSpeed = config.moveSpeed;
+                mDragTimeThreshold = config.dragTimeThreshold;
+                mOffsetThreshold = config.offsetThreshold;
+                mAccSpeed = config.accSpeed;
+            }
         }
 
         void Start()
@@ -229,7 +237,7 @@ namespace MiniGame
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
                     mDragTime = 0;
                     mOffsetDistance = 0;                
-                    canAccelerate = true;
+                    //canAccelerate = true;
                     if (canCountDownTurn)
                     {
                         mTurnCount--;
@@ -262,7 +270,7 @@ namespace MiniGame
                     mMoveDirection.Normalize();
                     //mRg2d.AddForce(moveDirection * mMoveSpeed);
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                    canAccelerate = true;
+                    //canAccelerate = true;
                     if (canCountDownTurn)
                     {
                         mTurnCount--;
@@ -304,15 +312,14 @@ namespace MiniGame
             mRg2D.Sleep();
             isMoveable = false;
             canCountDownTurn = false;
-            canPlayMoveSound = true;
-            //播放死亡动画         
-            mExplosionParticles.Play();
+            canPlayMoveSound = true;           
             //光球出摄像机外不播放死亡动画
             if (!isOutOfCamera && canPlayDeadEffet)
             {
                 //mPlayerDead = GameObject.Instantiate(Resources.Load("Prefabs/PlayerDead")) as GameObject;
                 //mPlayerDead.transform.position = gameObject.transform.position;
-                
+                //播放死亡动画         
+                mExplosionParticles.Play();
                 canPlayDeadEffet = false;
                 //播放死亡音效  
                 AudioManager.Instance.PlayOneShotIndex(7);
@@ -324,7 +331,7 @@ namespace MiniGame
             //这里是隐藏光球，因为Invoke或者协程需要gameObject的active为true的时候才能正常执行，所以这里想到用改透明度来隐藏光球
             gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(false);
-            canAccelerate = false;         
+            canAccelerate = true;         
             Invoke("ResetPlayer", mRebornTime);         
             Debug.Log("执行到这里了");
   
@@ -338,9 +345,9 @@ namespace MiniGame
             gameObject.GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 1), 1.0f) ;
             gameObject.transform.Find("Particle System").transform.gameObject.SetActive(true);
             this.transform.eulerAngles = new Vector3(0, 0, 0);
-            isMoveable = true;
+            Invoke("SetMoveable", 1.0f);       
             canPlayDeadEffet = true;
-            canAccelerate = false;
+            canAccelerate = true;
             mMoveSpeed = mInitialSpeed;
             //销毁小球死亡的GameObject
             if (mPlayerDead != null)
@@ -353,11 +360,16 @@ namespace MiniGame
             MessageBus.Send(new OnSubLevelFailedMsg());
         }
 
+        private void SetMoveable()
+        {
+            isMoveable = true;
+        }
+
         private IEnumerator GoToNext()
         {
             yield return new WaitForSeconds(1.2f);
             gameObject.GetComponent<BoxCollider2D>().enabled = false;          
-            canAccelerate = false;
+            canAccelerate = true;
             mMoveSpeed = mInitialSpeed;           
             //发送消息到GameSystem，小关卡完成，通知进入下一关卡      
             MessageBus.Send(new OnSubLevelCompleteMsg());
@@ -424,12 +436,15 @@ namespace MiniGame
             string tag = collision.gameObject.tag;
             switch (tag)
             {
-                case "Accelerate":
+                case "Accelerate":                  
                     //进入加速区域
-                    if (canAccelerate)
-                    {
+                    if (canAccelerate && isMoveable)
+                    {                                                            
                         mMoveDirection.Normalize();
+                        SetPlayerAngle(mMoveDirection, false);
                         mRg2D.velocity = mMoveDirection * mAccSpeed;
+                        mMoveSpeed = mAccSpeed;
+                        canAccelerate = false;
                     }          
                     break;
                 default:
@@ -447,12 +462,15 @@ namespace MiniGame
             switch (tag)
             {
                 case "Accelerate":
-                    //从加速区域出来，速度要恢复成原来的速度
-                    if (canAccelerate)
+                    if (isMoveable)
                     {
+                        //从加速区域出来，速度要恢复成原来的速度                   
                         mMoveDirection.Normalize();
-                        mRg2D.velocity = mMoveDirection * mMoveSpeed;
-                    }                 
+                        SetPlayerAngle(mMoveDirection, false);
+                        mRg2D.velocity = mMoveDirection * mInitialSpeed;
+                        mMoveSpeed = mInitialSpeed;
+                        canAccelerate = true;                      
+                    }
                     break;
                 case "CameraArea":
                     if (!isSuccess)
