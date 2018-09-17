@@ -6,9 +6,11 @@ namespace MiniGame
     public class AudioManager : MonoSingleton<AudioManager>
     {
         public List<AudioClip> audioList;
-        private AudioSource backMusicSource = null;
-        private AudioSource soundSource = null;
-        //public string musicName = "";
+        public AudioSource backMusicSource ;
+        public AudioSource soundSource ;
+
+        public float backMusicVolume = 0.4f;
+        public float soundSourceVolume = 1.0f;
 
         // Use this for initialization
         private void Start()
@@ -22,13 +24,10 @@ namespace MiniGame
         /// </summary>
         protected override void Init()
         {
-            backMusicSource = gameObject.AddComponent<AudioSource>();
-            backMusicSource.loop = true;
-
-            soundSource = gameObject.AddComponent<AudioSource>();
-            soundSource.volume = 0.48f;
-
+            backMusicSource.volume = backMusicVolume;
             backMusicSource.clip = this.audioList[0];
+
+            soundSource.volume = soundSourceVolume;
             backMusicSource.Play();
         }
         private void PlayMusic(string musicPath)

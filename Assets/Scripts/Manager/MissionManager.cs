@@ -12,6 +12,8 @@ namespace MiniGame
     public class MissionManager : MonoSingleton<MissionManager>, IGameManager
     {
 
+        public static MissionManager Instance;
+
         public ManagerStatus mStatus
         {
             get;
@@ -38,6 +40,11 @@ namespace MiniGame
         public int mMaxLevel { get; private set; }
         //最高等级的子关卡
         public int mMaxSubLevel { get; private set; }
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         public void Startup()
         {

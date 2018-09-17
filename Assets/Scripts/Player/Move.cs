@@ -89,8 +89,8 @@ namespace MiniGame
         private bool canPlayMoveSound = true;
 
         private bool canDoSuccess = true;
-        
 
+        private bool canMove = true;
         void Awake()
         {
             gameObject.transform.position = MissionManager.Instance.GetPlayerStartPos();
@@ -188,6 +188,7 @@ namespace MiniGame
                     canCountDownTurn = true;
                     canPlayMoveSound = true;
                     canDoSuccess = true;
+                    canMove = true;
                     this.transform.eulerAngles = new Vector3(0, 0, 0);
                 });
             }
@@ -232,7 +233,7 @@ namespace MiniGame
             mDragTime += Time.deltaTime;
             mOffsetDistance = mMoveDirection.magnitude;
             //滑动的时候超过时间的阈值或者超过距离的阈值，球也要转向      
-            if (((mDragTime > mDragTimeThreshold) || (mOffsetDistance > mOffsetThreshold)) && isMoveable)
+            if (((mDragTime > mDragTimeThreshold) || (mOffsetDistance > mOffsetThreshold)) && isMoveable && canMove)
             {
                 if (canTurnInfinite || mTurnCount > 0)
                 {
@@ -265,7 +266,7 @@ namespace MiniGame
             mTargetPosition = gesture.position;
             mMoveDirection = mTargetPosition - mStartPosition;
             //必须滑动到一定的距离才能转向
-            if (mMoveDirection.magnitude >= mMinoffset && isMoveable)
+            if (mMoveDirection.magnitude >= mMinoffset && isMoveable && canMove)
             {
                 if (canTurnInfinite || mTurnCount > 0)
                 {
@@ -318,6 +319,7 @@ namespace MiniGame
         {
             //重置位置                      
             mRg2D.Sleep();
+            canMove = false;
             isMoveable = false;
             canCountDownTurn = false;
             canPlayMoveSound = true;
@@ -370,6 +372,7 @@ namespace MiniGame
 
         private void SetMoveable()
         {
+            canMove = true;
             isMoveable = true;
         }
 
@@ -478,12 +481,15 @@ namespace MiniGame
                 case "Accelerate":
                     //if (isMoveable)
                     //{
-                        //从加速区域出来，速度要恢复成原来的速度                   
+                        //从加速区域出来，速度要恢复成原来的速度     
+                    if (canMove)
+                    {
                         mMoveDirection.Normalize();
                         SetPlayerAngle(mMoveDirection, false);
                         mRg2D.velocity = mMoveDirection * mInitialSpeed;
                         mMoveSpeed = mInitialSpeed;
                         canAccelerate = true;
+                    }                       
                     //}
                     break;
                 case "CameraArea":
