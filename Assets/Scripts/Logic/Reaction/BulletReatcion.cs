@@ -41,6 +41,7 @@ namespace MiniGame
                 canReact = false;
                 mParticleSystemEffect.Play();
                 gameObject.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
+                gameObject.transform.FindChild("Particle System").gameObject.SetActive(false);
                 if (isAniComplete)
                 {
                     StartCoroutine(FlyStoneAndFade());
@@ -55,6 +56,7 @@ namespace MiniGame
             canReact = true;
             gameObject.SetActive(true);
             gameObject.GetComponent<SpriteRenderer>().color = initinalStoneColor;
+            gameObject.transform.FindChild("Particle System").gameObject.SetActive(true);
             return false;
         }
 
