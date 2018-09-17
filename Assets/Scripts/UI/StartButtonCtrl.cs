@@ -32,13 +32,12 @@ namespace MiniGame
         // 读取故事关
         void LoadStoryScene()
         {
-            SceneManager.LoadScene("Level0Story");
+            SceneManager.LoadSceneAsync("Level0Story");
         }
 
         bool CheckHasPlayed()
         {
-            var p = MiniGame.PlayerProgress.Instance;
-            return p.HasPlayed && p.RecentMainLevel > 0 && p.RecentSubLevel > 0;
+            return MiniGame.PlayerProgress.Instance.HasPlay();
         }
     }
 

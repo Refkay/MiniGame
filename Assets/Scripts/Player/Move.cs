@@ -91,6 +91,8 @@ namespace MiniGame
         private bool canDoSuccess = true;
 
         private bool canMove = true;
+
+        private Vector3 mAcceMovePosition;     
         void Awake()
         {
             gameObject.transform.position = MissionManager.Instance.GetPlayerStartPos();
@@ -228,8 +230,8 @@ namespace MiniGame
             if (mTurnCount > 0)
             {
                 mTargetPosition = gesture.position;
-            }        
-            mMoveDirection = mTargetPosition - mStartPosition;
+                mMoveDirection = mTargetPosition - mStartPosition;
+            }                  
             mDragTime += Time.deltaTime;
             mOffsetDistance = mMoveDirection.magnitude;
             //滑动的时候超过时间的阈值或者超过距离的阈值，球也要转向      
@@ -253,6 +255,7 @@ namespace MiniGame
                         mTurnCount--;
                     }
                     isMoveable = false;
+                    mAcceMovePosition = mMoveDirection;
                 }
             }
         }
@@ -263,8 +266,11 @@ namespace MiniGame
             mDragTime = 0;
             //偏移量归0
             mOffsetDistance = 0;
-            mTargetPosition = gesture.position;
-            mMoveDirection = mTargetPosition - mStartPosition;
+            if (mTurnCount > 0)
+            {
+                mTargetPosition = gesture.position;
+                mMoveDirection = mTargetPosition - mStartPosition;
+            }       
             //必须滑动到一定的距离才能转向
             if (mMoveDirection.magnitude >= mMinoffset && isMoveable && canMove)
             {
@@ -285,6 +291,7 @@ namespace MiniGame
                         mTurnCount--;
                     }
                     isMoveable = false;
+                    mAcceMovePosition = mMoveDirection;
                 }
             }
         }
@@ -431,12 +438,16 @@ namespace MiniGame
                 case "Accelerate":
                     //进入加速区域
                     if (canAccelerate)
-                    {
-                        mMoveDirection.Normalize();
-                        SetPlayerAngle(mMoveDirection, false);
-                        mRg2D.velocity = mMoveDirection * mAccSpeed;
+                    {                    
+                        SetPlayerAngle(mAcceMovePosition, false);
+                        mRg2D.velocity = mAcceMovePosition * mAccSpeed;
                         mMoveSpeed = mAccSpeed;
                         canAccelerate = false;
+                        //mMoveDirection.Normalize();
+                        //SetPlayerAngle(mMoveDirection, false);
+                        //mRg2D.velocity = mMoveDirection * mAccSpeed;
+                        //mMoveSpeed = mAccSpeed;
+                        //canAccelerate = false;
                     }
                     break;
                 default:
@@ -484,9 +495,8 @@ namespace MiniGame
                         //从加速区域出来，速度要恢复成原来的速度     
                     if (canMove)
                     {
-                        mMoveDirection.Normalize();
-                        SetPlayerAngle(mMoveDirection, false);
-                        mRg2D.velocity = mMoveDirection * mInitialSpeed;
+                        SetPlayerAngle(mAcceMovePosition, false);
+                        mRg2D.velocity = mAcceMovePosition * mInitialSpeed;
                         mMoveSpeed = mInitialSpeed;
                         canAccelerate = true;
                     }                       

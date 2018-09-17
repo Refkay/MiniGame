@@ -44,7 +44,7 @@ namespace MiniGame
             {
                 if (!mStoneList[i].activeSelf)
                 {
-                    mStoneList[i].SetActive(true);
+                    //mStoneList[i].SetActive(true);
                 }
             }
             ClearStoneList();

@@ -165,6 +165,7 @@ namespace MiniGame
 
         private void SceneChange()
         {
+            MissionManager.Instance.UpdateMissionLevel(1, 1);
             SceneManager.UnloadScene("Level1Story");
             SceneManager.LoadSceneAsync("Level1-1");
         }

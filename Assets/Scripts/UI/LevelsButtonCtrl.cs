@@ -15,11 +15,11 @@ public class LevelsButtonCtrl : MonoBehaviour {
     // 检查是否玩过
     bool CheckHasPlayed()
     {
-        return MiniGame.PlayerProgress.Instance.HasPlayed;
+        return MiniGame.PlayerProgress.Instance.HasPlay();
     }
 
     private void OnClick()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SelectLevel");
+        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("SelectLevel");
     }
 }

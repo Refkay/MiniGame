@@ -44,6 +44,7 @@ namespace MiniGame
                 gameObject.transform.FindChild("Particle System").gameObject.SetActive(false);
                 if (isAniComplete)
                 {
+                    canReact = false;
                     StartCoroutine(FlyStoneAndFade());
                 }
             }
@@ -52,11 +53,10 @@ namespace MiniGame
         private bool OnSubLevelFailed(OnSubLevelFailedMsg msg)
         {        
             gameObject.transform.position = mInitialPosition;
-            gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
-            canReact = true;
-            gameObject.SetActive(true);
-            gameObject.GetComponent<SpriteRenderer>().color = initinalStoneColor;
-            gameObject.transform.FindChild("Particle System").gameObject.SetActive(true);
+            gameObject.transform.eulerAngles = new Vector3(0, 0, 0);         
+            //gameObject.SetActive(true);
+            //gameObject.GetComponent<SpriteRenderer>().color = initinalStoneColor;
+            //gameObject.transform.FindChild("Particle System").gameObject.SetActive(true);
             return false;
         }
 

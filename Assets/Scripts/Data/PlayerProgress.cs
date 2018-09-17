@@ -31,7 +31,7 @@ namespace MiniGame
         // 最近一次游戏正在玩的主关卡
         public int RecentMainLevel { get { return _recentMainLevel; } }
         // 最近一次游戏正在玩的子关卡
-        public int RecentSubLevel { get { return _recentSubLevel; } }
+        public int RecentSubLevel { get { return _recentSubLevel; } }     
 
         public void SubmitNewProgress(int mainLv, int subLv)
         {
@@ -54,6 +54,7 @@ namespace MiniGame
         // 保存玩家信息
         private void Save()
         {
+            PlayerPrefs.SetInt(HAS_PALY, 1);
             PlayerPrefs.SetInt(HIGHEST_MAIN_LEVEL_KEY, _highestMainLevel);
             PlayerPrefs.SetInt(HIGHEST_SUB_LEVEL_KEY, _highestSubLevel);
             PlayerPrefs.SetInt(RECENT_MAIN_LEVEL_KEY, _recentMainLevel);
@@ -62,34 +63,39 @@ namespace MiniGame
 
         // 读取玩家信息
         private void Load()
-        {
-            if (DataExist())
+        {          
+            if (HasPlay())
             {
                 _highestMainLevel = PlayerPrefs.GetInt(HIGHEST_MAIN_LEVEL_KEY);
                 _highestSubLevel = PlayerPrefs.GetInt(HIGHEST_SUB_LEVEL_KEY);
                 _recentMainLevel = PlayerPrefs.GetInt(RECENT_MAIN_LEVEL_KEY);
                 _recentSubLevel = PlayerPrefs.GetInt(RECENT_SUB_LEVEL_KEY);
-                _hasPlayed = true;
             }
             else
             {
-                _highestMainLevel = 0;
-                _highestSubLevel = 0;
-                _recentMainLevel = 0;
-                _recentSubLevel = 0;
+                _highestMainLevel = 1;
+                _highestSubLevel = 1;
+                _recentMainLevel = 1;
+                _recentSubLevel = 1;
                 _hasPlayed = false;
             }
-        }
+        }    
 
-        private bool DataExist()
+        public bool HasPlay()
         {
-            return
-                PlayerPrefs.HasKey(HIGHEST_MAIN_LEVEL_KEY) &&
-                PlayerPrefs.HasKey(HIGHEST_SUB_LEVEL_KEY) &&
-                PlayerPrefs.HasKey(RECENT_MAIN_LEVEL_KEY) &&
-                PlayerPrefs.HasKey(RECENT_SUB_LEVEL_KEY);
+            int hasPlay = PlayerPrefs.GetInt(HAS_PALY, 0);
+            if (hasPlay == 0)
+            {
+                _hasPlayed = false;
+            }
+            else
+            {
+                _hasPlayed = true;
+            }
+            return _hasPlayed;
         }
 
+        private const string HAS_PALY = "HasPlay";
         private const string HIGHEST_MAIN_LEVEL_KEY = "HMainLevel";
         private const string HIGHEST_SUB_LEVEL_KEY = "HSubLevel";
         private const string RECENT_MAIN_LEVEL_KEY = "RMainLevel";

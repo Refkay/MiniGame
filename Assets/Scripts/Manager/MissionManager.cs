@@ -51,27 +51,18 @@ namespace MiniGame
             mStatus = ManagerStatus.Started;
             //TODO ：这里的数据需要从存储里面读取，因为还没做，所以先放这里
             MissionData.LoadMissionData();
-            //LoadMissionProgress();
-            UpdateMissionLevel(1, 1);
+            PlayerProgress.Instance.Reload();
+            LoadMissionProgress();
             mMaxLevel = MissionData.GetMaxLevel();
             mMaxSubLevel = MissionData.GetMaxSubLevel(mCurLevel);
         }
 
         private void LoadMissionProgress()
-        {
-            var dataValid =
-                PlayerProgress.Instance.HasPlayed &&
-                PlayerProgress.Instance.RecentMainLevel > 0 &&
-                PlayerProgress.Instance.RecentSubLevel > 0;
-            if (dataValid)
+        {           
+            if (PlayerProgress.Instance.HasPlay())
             {
                 UpdateMissionLevel(PlayerProgress.Instance.RecentMainLevel, PlayerProgress.Instance.RecentSubLevel);
-            }
-            else
-            {
-                UpdateMissionLevel(1, 1);
-            }
-
+            }        
         }
 
         public void UpdateMissionLevel(int currentLevel, int currentSubLevel)
@@ -99,7 +90,7 @@ namespace MiniGame
             {
                 Debug.Log("Last level");
 
-                PlayerProgress.Instance.SubmitNewProgress(0, 0);
+                PlayerProgress.Instance.SubmitNewProgress(1, 1);
                 //发送消息，游戏已经到最后一关了,到这里整个游戏通关了
                 MessageBus.Send(new OnGameCompleteMsg());
             }
