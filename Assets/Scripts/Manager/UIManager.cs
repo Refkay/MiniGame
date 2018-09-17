@@ -22,7 +22,7 @@ namespace MiniGame
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            //AddButtonListener();
+            AddButtonListener();
         }
 
         private void AddButtonListener()
