@@ -116,6 +116,10 @@ namespace MiniGame
             canTurnInfinite = MissionData.GetLevelTurnInfinite(MissionManager.Instance.mCurLevel, MissionManager.Instance.mCurSubLevel);
             isSuccess = false;
             StartCoroutine(ShowGamePanel());
+            //if (MissionManager.Instance.mCurLevel == 1 && MissionManager.Instance.mCurSubLevel == 1)
+            //{
+                StartCoroutine(CheckAndShowGuidePanel(MissionManager.Instance.mCurSubLevel, 3.0f));
+            //}       
         }
 
 
@@ -192,6 +196,7 @@ namespace MiniGame
                     canDoSuccess = true;
                     canMove = true;
                     this.transform.eulerAngles = new Vector3(0, 0, 0);
+                    StartCoroutine(CheckAndShowGuidePanel(MissionManager.Instance.mCurSubLevel, 3.0f));
                 });
             }
             //小球的初始化位置变为下一个位置         
@@ -539,6 +544,60 @@ namespace MiniGame
                 }
             }
             return null;
+        }
+
+        IEnumerator CheckAndShowGuidePanel(int curSubLevel, float hideTime)
+        {
+            yield return null;
+
+            switch (curSubLevel)
+            {           
+                case 1:
+                    if (!PlayerProgress.Instance.GetGuideFirst())
+                    {
+                        PlayerProgress.Instance.SetGuideFirst();
+                        yield return new WaitForSeconds(2.8f);
+                        UIManager.Instance.newGuide1.SetActive(true);
+                        yield return new WaitForSeconds(hideTime);
+                        UIManager.Instance.newGuide1.SetActive(false);
+                        UIManager.Instance.newGuide2.SetActive(true);
+                        yield return new WaitForSeconds(hideTime);
+                        UIManager.Instance.newGuide2.SetActive(false);
+                    }
+                    break;
+                case 2:
+                    if (!PlayerProgress.Instance.GetGuideSecond())
+                    {
+                        PlayerProgress.Instance.SetGuideSecond();
+                        UIManager.Instance.newGuide3.SetActive(true);
+                        yield return new WaitForSeconds(hideTime);
+                        UIManager.Instance.newGuide3.SetActive(false);
+                        UIManager.Instance.newGuide4.SetActive(true);
+                        yield return new WaitForSeconds(hideTime);
+                        UIManager.Instance.newGuide4.SetActive(false);
+                    }
+                    break;
+                case 3:
+                    if (!PlayerProgress.Instance.GetGuideThird())
+                    {
+                        PlayerProgress.Instance.SetGuideThird();
+                        UIManager.Instance.newGuide5.SetActive(true);
+                        yield return new WaitForSeconds(hideTime);
+                        UIManager.Instance.newGuide5.SetActive(false);                       
+                    }
+                    break;
+                case 4:
+                    if (!PlayerProgress.Instance.GetGuideThird())
+                    {
+                        PlayerProgress.Instance.SetGuideFourth();
+                        UIManager.Instance.newGuide6.SetActive(true);
+                        yield return new WaitForSeconds(hideTime);
+                        UIManager.Instance.newGuide6.SetActive(false);
+                    }
+                    break;
+                default:
+                    break;
+            }       
         }
     }
 

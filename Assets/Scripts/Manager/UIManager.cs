@@ -18,6 +18,18 @@ namespace MiniGame
 
         public Button QuitBtn;
 
+        public GameObject newGuide1;
+
+        public GameObject newGuide2;
+
+        public GameObject newGuide3;
+
+        public GameObject newGuide4;
+
+        public GameObject newGuide5;
+
+        public GameObject newGuide6;
+
         private void Awake()
         {
             Instance = this;

@@ -101,10 +101,83 @@ namespace MiniGame
         private const string RECENT_MAIN_LEVEL_KEY = "RMainLevel";
         private const string RECENT_SUB_LEVEL_KEY = "RSubLevel";
 
+        private const string GUIDE_FIRST = "GuideFirst";
+        private const string GUIDE_SECOND = "GuideSecond";
+        private const string GUIDE_THIRD = "GuideThird";
+        private const string GUIDE_FOURTH = "GuideTHird";
+
         private bool _hasPlayed;
         private int _highestMainLevel;
         private int _highestSubLevel;
         private int _recentMainLevel;
         private int _recentSubLevel;
+
+        public bool GetGuideFirst()
+        {
+            if (PlayerPrefs.GetInt(GUIDE_FIRST, 0) == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void SetGuideFirst()
+        {
+            PlayerPrefs.SetInt(GUIDE_FIRST, 1);
+        }
+
+        public bool GetGuideSecond()
+        {
+            if (PlayerPrefs.GetInt(GUIDE_SECOND, 0) == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void SetGuideSecond()
+        {
+            PlayerPrefs.SetInt(GUIDE_SECOND, 1);
+        }
+
+        public bool GetGuideThird()
+        {
+            if (PlayerPrefs.GetInt(GUIDE_THIRD, 0) == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void SetGuideThird()
+        {
+            PlayerPrefs.SetInt(GUIDE_THIRD, 1);
+        }
+
+        public bool GetGuideFourth()
+        {
+            if (PlayerPrefs.GetInt(GUIDE_FOURTH, 0) == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void SetGuideFourth()
+        {
+            PlayerPrefs.SetInt(GUIDE_FOURTH, 1);
+        }
     }
 }
