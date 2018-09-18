@@ -2,6 +2,7 @@
 using System.Collections;
 using MiniGameComm;
 using DG.Tweening;
+using System.Collections.Generic;
 
 namespace MiniGame
 {
@@ -82,29 +83,33 @@ namespace MiniGame
             AudioManager.Instance.PlayOneShotIndex(4);
             Animator animator = UFO.GetComponent<Animator>();
             animator.enabled = true;
-            animator.Play("UFOAni", -1, 0.0f);          
-              
-            GameObject stone = StoneManager.Instance.GetRadomStoneTrasform();
-            Vector3 initinalStonePosition = stone.gameObject.transform.position;
-            Color initinalStoneColor = stone.GetComponent<SpriteRenderer>().color;
+            animator.Play("UFOAni", -1, 0.0f);                       
             yield return new WaitForSeconds(1.5f);
 
-            Vector3 targetPosition = MissionData.GetCameraPosition(MissionManager.Instance.mCurLevel,
-                MissionManager.Instance.mCurSubLevel);
-
-            targetPosition.y += 6.5f;
-
-            //stone.GetComponent<SpriteRenderer>().DOColor(new Color(0, 0, 0, 0), 1.0f);
-            //石头要变成Trigger，不然在飞行的过程中撞到Player会导致Player死亡
-            stone.gameObject.GetComponent<PolygonCollider2D>().isTrigger = true;
-            stone.gameObject.transform.DOMove(targetPosition, 1.0f).OnComplete(() =>
+            List<GameObject> stoneList = StoneManager.Instance.GetRadomStoneTrasform();
+            for (int i = 0; i < stoneList.Count; i ++)
             {
-                stone.gameObject.SetActive(false);
-                stone.gameObject.GetComponent<PolygonCollider2D>().isTrigger = false;
-                stone.gameObject.transform.position = initinalStonePosition;
-                stone.GetComponent<SpriteRenderer>().color = initinalStoneColor;               
-                //这里要播放炸掉石头的特效
-            });
+                GameObject stone = stoneList[i];
+                Vector3 initinalStonePosition = stone.gameObject.transform.position;
+                Color initinalStoneColor = stone.GetComponent<SpriteRenderer>().color;
+                Vector3 targetPosition = MissionData.GetCameraPosition(MissionManager.Instance.mCurLevel,
+                    MissionManager.Instance.mCurSubLevel);
+
+                targetPosition.y += 6.5f;
+
+                //stone.GetComponent<SpriteRenderer>().DOColor(new Color(0, 0, 0, 0), 1.0f);
+                //石头要变成Trigger，不然在飞行的过程中撞到Player会导致Player死亡
+                stone.gameObject.GetComponent<PolygonCollider2D>().isTrigger = true;
+                stone.gameObject.transform.DOMove(targetPosition, 1.0f).OnComplete(() =>
+                {
+                    stone.gameObject.SetActive(false);
+                    stone.gameObject.GetComponent<PolygonCollider2D>().isTrigger = false;
+                    stone.gameObject.transform.position = initinalStonePosition;
+                    stone.GetComponent<SpriteRenderer>().color = initinalStoneColor;
+                    //这里要播放炸掉石头的特效
+                });
+            }
+           
             yield return new WaitForSeconds(2.5f);
             isAniComplete = true;
             animator.enabled = false;

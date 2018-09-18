@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using MiniGameComm;
 
 namespace MiniGame
@@ -103,13 +104,34 @@ namespace MiniGame
         }
         
         //随机返回一个石头
-        public  GameObject GetRadomStoneTrasform()
+        public  List<GameObject> GetRadomStoneTrasform()
         {
+            List<GameObject> stoneList = new List<GameObject>();
             ClearStoneList();
             SetStoneList(false);
-            int radomNum = Random.Range(0, mStoneList.Count);
-            Debug.Log("石头LIst:" + mStoneList.Count + "\n随机数：" + radomNum);
-            return mStoneList[radomNum];          
+
+            if (mStoneList.Count <= 0)
+            {
+                return stoneList;
+            }
+            Debug.Log("石头随机数 ：" + mStoneList.Count);
+            int radomStoneNum = UnityEngine.Random.Range(7, 10);
+            Debug.Log("石头随机数 ：" + radomStoneNum);
+
+            int stonCount = Mathf.CeilToInt(mStoneList.Count / radomStoneNum);
+            Debug.Log("随机消失的石头数量 ：" + stonCount);
+            if (stonCount < 1)
+            {
+                stonCount = 1;
+            }
+            for (int i = 0; i < stonCount; i++)
+            {
+                int radomNum = UnityEngine.Random.Range(0, mStoneList.Count);
+                stoneList.Add(mStoneList[radomNum]);
+                mStoneList.RemoveAt(radomNum);
+            }
+           
+            return stoneList;          
         }
     }
 }

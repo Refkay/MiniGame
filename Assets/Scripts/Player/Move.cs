@@ -61,7 +61,7 @@ namespace MiniGame
         //光球初始化角度
         private Quaternion mInitialRotation;
 
-        //转向机会
+        //转向机会(注意，真正能转向的次数是这个值减1，因为第一次出发不算转向)
         private int mTurnCount = 2;
 
         //吃到的星星数量
@@ -92,10 +92,18 @@ namespace MiniGame
 
         private bool canMove = true;
 
-        private Vector3 mAcceMovePosition;     
+        private Vector3 mAcceMovePosition;
+
+        private bool canDreaseTurnCount = false;
+
+        private bool isFlying = false;
+
+        private int mInitinalTurnCount;
+
         void Awake()
         {
             gameObject.transform.position = MissionManager.Instance.GetPlayerStartPos();
+            mInitinalTurnCount = mTurnCount;
             InitMessage(true);
             Config config = Config.Load();
             if (config != null)
@@ -125,8 +133,9 @@ namespace MiniGame
 
         IEnumerator ShowGamePanel()
         {
-            yield return new WaitForSeconds(3.0f);
+            yield return new WaitForSeconds(3.0f);       
             UIManager.Instance.GoToGame();
+            UIManager.Instance.SetTurnCountText(mTurnCount - 1);
         }
 
         private void InitMessage(bool register)
@@ -152,7 +161,8 @@ namespace MiniGame
         /// <returns></returns>
         private bool OnAddTurnChance(OnAddTurnChanceMsg msg)
         {
-            mTurnCount++;
+            mTurnCount = mInitinalTurnCount - 1;
+            UIManager.Instance.SetTurnCountText(mTurnCount);
             return false;
         }
 
@@ -190,12 +200,15 @@ namespace MiniGame
                 {
                     gameObject.GetComponent<BoxCollider2D>().enabled = true;
                     isMoveable = true;
-                    mTurnCount = 2;
+                    mTurnCount = mInitinalTurnCount;
+                    UIManager.Instance.SetTurnCountText(mTurnCount - 1);
                     canCountDownTurn = true;
                     canPlayMoveSound = true;
                     canDoSuccess = true;
                     canMove = true;
+                    canDreaseTurnCount = false;
                     this.transform.eulerAngles = new Vector3(0, 0, 0);
+                    isFlying = false;
                     StartCoroutine(CheckAndShowGuidePanel(MissionManager.Instance.mCurSubLevel, 3.0f));
                 });
             }
@@ -225,9 +238,8 @@ namespace MiniGame
             if (mTurnCount > 0)
             {
                 mStartPosition = gesture.position;
-            }
-       
-            Debug.Log("坐标是多少 ： " + gesture.position.x + "  Y: " + gesture.position.y);
+            }      
+          
         }
 
         private void On_TouchDown(Gesture gesture)
@@ -249,7 +261,10 @@ namespace MiniGame
                         AudioManager.Instance.PlayOneShotIndex(6);
                         canPlayMoveSound = false;
                     }
-                    SetPlayerAngle(mMoveDirection, false);
+                    if (!isFlying)
+                    {
+                        SetPlayerAngle(mMoveDirection, false);
+                    }       
                     mMoveDirection.Normalize();
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
                     mDragTime = 0;
@@ -258,6 +273,11 @@ namespace MiniGame
                     if (canCountDownTurn)
                     {
                         mTurnCount--;
+                        if (canDreaseTurnCount)
+                        {
+                            UIManager.Instance.SetTurnCountText(mTurnCount);
+                        }
+                        canDreaseTurnCount = true;
                     }
                     isMoveable = false;
                     mAcceMovePosition = mMoveDirection;
@@ -285,8 +305,11 @@ namespace MiniGame
                     {
                         AudioManager.Instance.PlayOneShotIndex(6);
                         canPlayMoveSound = false;
-                    }         
-                    SetPlayerAngle(mMoveDirection, false);
+                    }
+                    if (!isFlying)
+                    {
+                        SetPlayerAngle(mMoveDirection, false);
+                    }
                     mMoveDirection.Normalize();
                     //mRg2d.AddForce(moveDirection * mMoveSpeed);
                     mRg2D.velocity = mMoveDirection * mMoveSpeed;
@@ -294,6 +317,11 @@ namespace MiniGame
                     if (canCountDownTurn)
                     {
                         mTurnCount--;
+                        if (canDreaseTurnCount)
+                        {
+                            UIManager.Instance.SetTurnCountText(mTurnCount);
+                        }
+                        canDreaseTurnCount = true;
                     }
                     isMoveable = false;
                     mAcceMovePosition = mMoveDirection;
@@ -303,8 +331,7 @@ namespace MiniGame
 
         private void SetPlayerAngle(Vector3 targetPosition, bool isMoveToNext)
         {
-            float angle = Vector2.Angle(targetPosition, Vector3.up);
-            Debug.Log("角度等于多少：" + angle);
+            float angle = Vector2.Angle(targetPosition, Vector3.up);      
             if (!isMoveToNext)
             {
                 if (mTargetPosition.x > mStartPosition.x)
@@ -335,6 +362,7 @@ namespace MiniGame
             isMoveable = false;
             canCountDownTurn = false;
             canPlayMoveSound = true;
+            canDreaseTurnCount = false;
             //光球出摄像机外不播放死亡动画
             if (!isOutOfCamera && canPlayDeadEffet)
             {
@@ -377,7 +405,8 @@ namespace MiniGame
                 Destroy(mPlayerDead);
             }
             //重置转向次数
-            mTurnCount = 2;
+            mTurnCount = mInitinalTurnCount;
+            UIManager.Instance.SetTurnCountText(mTurnCount - 1);
             canCountDownTurn = true;
             MessageBus.Send(new OnSubLevelFailedMsg());
         }
@@ -427,6 +456,7 @@ namespace MiniGame
                 case "Destination":
                     if (canDoSuccess)
                     {
+                        isFlying = true;
                         canDoSuccess = false;
                         //通过当前小关卡
                         Debug.Log("On SubLevel Complete");
@@ -587,7 +617,7 @@ namespace MiniGame
                     }
                     break;
                 case 4:
-                    if (!PlayerProgress.Instance.GetGuideThird())
+                    if (!PlayerProgress.Instance.GetGuideFourth())
                     {
                         PlayerProgress.Instance.SetGuideFourth();
                         UIManager.Instance.newGuide6.SetActive(true);

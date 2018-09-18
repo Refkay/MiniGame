@@ -18,6 +18,10 @@ namespace MiniGame
 
         public Button QuitBtn;
 
+        public GameObject PauseAndTurnCountPanel;
+
+        public Text turnCountText;
+
         public GameObject newGuide1;
 
         public GameObject newGuide2;
@@ -48,33 +52,38 @@ namespace MiniGame
         {
             Time.timeScale = 0.0f;
             gamePanel.SetActive(true);
-            pauseBtn.gameObject.SetActive(false);
+            PauseAndTurnCountPanel.gameObject.SetActive(false);
         }
 
         public void OnContinueBtnClick()
         {
             Time.timeScale = 1.0f;
             gamePanel.SetActive(false);
-            pauseBtn.gameObject.SetActive(true);
+            PauseAndTurnCountPanel.gameObject.SetActive(true);
         }
 
         public void OnQuitBtnClick()
         {
             gamePanel.SetActive(false);
-            pauseBtn.gameObject.SetActive(false);
+            PauseAndTurnCountPanel.gameObject.SetActive(false);
             SceneManager.LoadSceneAsync("MainMenu");
         }
 
         public void GoToGame()
         {
             gamePanel.SetActive(false);
-            pauseBtn.gameObject.SetActive(true);
+            PauseAndTurnCountPanel.gameObject.SetActive(true);
         }
 
         public void HideAll()
         {
             gamePanel.SetActive(false);
-            pauseBtn.gameObject.SetActive(false); 
+            PauseAndTurnCountPanel.gameObject.SetActive(false); 
+        }
+
+        public void SetTurnCountText(int count)
+        {
+            turnCountText.text = "x " + count;
         }
     }
 }
